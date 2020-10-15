@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Kuehlschrank Inventar</string>
+    <string name="abc">Lebensmittel ausreichend vorhanden!</string>
 </resources>
