@@ -12,4 +12,6 @@ class Inventar {
 
 
     }
+    b = 5;
+    final static String INVENTAR = "inventar", ZWEIT_INVENTAR = "2. inventar";
 }
