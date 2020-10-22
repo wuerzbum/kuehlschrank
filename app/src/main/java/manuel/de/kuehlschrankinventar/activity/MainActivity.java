@@ -1,16 +1,18 @@
 package manuel.de.kuehlschrankinventar.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import manuel.de.kuehlschrankinventar.holder.Inventar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import manuel.de.kuehlschrankinventar.R;
+import manuel.de.kuehlschrankinventar.holder.Inventar;
+import manuel.de.kuehlschrankinventar.scanner.PictureCodeActivity;
+import manuel.de.kuehlschrankinventar.scanner.ScannedCodeActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.takePicture:
-                //TODO takePicture
+                startActivity(new Intent(MainActivity.this, PictureCodeActivity.class));
                 break;
 
             case R.id.scanBarcode:
-                //TODO scan barcode
+                startActivity(new Intent(MainActivity.this, ScannedCodeActivity.class));
                 break;
         }
 
