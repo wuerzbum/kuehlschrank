@@ -1,9 +1,12 @@
-package manuel.de.kuehlschrankinventar;
+package manuel.de.kuehlschrankinventar.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
+
+import manuel.de.kuehlschrankinventar.holder.Inventar;
+import manuel.de.kuehlschrankinventar.R;
 
 public class MainActivity extends AppCompatActivity {
 

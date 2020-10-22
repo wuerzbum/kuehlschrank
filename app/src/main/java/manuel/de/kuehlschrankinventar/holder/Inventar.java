@@ -1,6 +1,6 @@
-package manuel.de.kuehlschrankinventar;
+package manuel.de.kuehlschrankinventar.holder;
 
-class Inventar {
+public class Inventar {
     final static String INVENTAR = "inventar";
     int a;
 
