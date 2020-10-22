@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Kuehlschrank Inventar</string>
     <string name="abc">Lebensmittel ausreichend vorhanden!</string>
+
+    <string name="menu_scan_barcode">Barcode scannen</string>
+    <string name="menu_take_picture">Bild aufnehmen</string>
+
 </resources>
