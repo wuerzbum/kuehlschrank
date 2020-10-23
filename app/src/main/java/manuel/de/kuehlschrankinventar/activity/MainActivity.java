@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.holder.Inventar;
-import manuel.de.kuehlschrankinventar.scanner.PictureCodeActivity;
 import manuel.de.kuehlschrankinventar.scanner.ScannedCodeActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,12 +50,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.takePicture:
+            //TODO falls doch gewünscht, dass man fotografieren kann das folgende wieder "entkommentieren"
+            /*case R.id.takePicture:
                 startActivity(new Intent(MainActivity.this, PictureCodeActivity.class));
-                break;
+                break;*/
 
             case R.id.scanBarcode:
-                startActivity(new Intent(MainActivity.this, ScannedCodeActivity.class));
+                Intent i = new Intent(MainActivity.this, ScannedCodeActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
                 break;
         }
 

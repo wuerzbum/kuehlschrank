@@ -1,13 +1,16 @@
 package manuel.de.kuehlschrankinventar.scanner;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -25,6 +28,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import manuel.de.kuehlschrankinventar.R;
+import manuel.de.kuehlschrankinventar.dialog.ScannedBarcodeDialog;
 
 public class ScannedCodeActivity extends AppCompatActivity {
 
@@ -33,9 +37,9 @@ public class ScannedCodeActivity extends AppCompatActivity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private final static int REQUEST_CAMERA_PERMISSION = 201;
-    private Button btnAction;
     private String intentData = "";
     private boolean isEmail = false;
+    private ScannedBarcodeDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,29 +61,31 @@ public class ScannedCodeActivity extends AppCompatActivity {
         initialiseDetectorsAndSources();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        try {
+                            cameraSource.start(surfaceView.getHolder());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return;
+                    }
+                }
+                break;
+        }
+    }
+
     private void initViews() {
         txtBarcodeValue = findViewById(R.id.txtBarcodeValue);
         surfaceView = findViewById(R.id.surfaceView);
-        btnAction = findViewById(R.id.btnAction);
-
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (intentData.length() > 0) {
-                    if (isEmail) {
-                        startActivity(new Intent(ScannedCodeActivity.this, EMailActivity.class).putExtra("email_adress", intentData));
-                    } else {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(intentData)));
-                    }
-                }
-            }
-        });
     }
 
     private void initialiseDetectorsAndSources() {
-        //TODO text in xml eingeben
-        Toast.makeText(getApplicationContext(), "Barcode scanner started", Toast.LENGTH_SHORT).show();
-
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
@@ -96,10 +102,8 @@ public class ScannedCodeActivity extends AppCompatActivity {
                     if (ActivityCompat.checkSelfPermission(ScannedCodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
                     } else {
-                        ActivityCompat.requestPermissions(ScannedCodeActivity.this, new
-                                String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                        ActivityCompat.requestPermissions(ScannedCodeActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -121,36 +125,48 @@ public class ScannedCodeActivity extends AppCompatActivity {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                //TODO text in xml eingeben
-                Toast.makeText(getApplicationContext(), "To prevent memory leaks barcode scanner has been stopped", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
-
-
                     txtBarcodeValue.post(new Runnable() {
 
                         @Override
                         public void run() {
-
-                            if (barcodes.valueAt(0).email != null) {
-                                txtBarcodeValue.removeCallbacks(null);
-                                intentData = barcodes.valueAt(0).email.address;
-                                txtBarcodeValue.setText(intentData);
-                                isEmail = true;
-                                //TODO text in xml eingeben
-                                btnAction.setText("ADD CONTENT TO THE MAIL");
-                            } else {
-                                isEmail = false;
-                                //TODO text in xml eingeben
-                                btnAction.setText("LAUNCH URL");
                                 intentData = barcodes.valueAt(0).displayValue;
+                                /*TODO Barcodeverarbeiten
+                                *  Produkte haben immer denselben Barcode
+                                *  Barcode APIs (mit denen der Barcode direkt ausgewertet werden können)
+                                *  kosten Geld (pro Zugriff / Monatlich)
+                                *  Vorschlag: wenn eine Nummer gescannt wird, wird der Nutzer aufgefordert Daten für dieses Produkt zu hinterlegen
+                                *  sollte bereits ein Produkt zu Nummer gespeichert sein, dann wird dieses direkt übernommen
+                                *  Notwendig hierfür:
+                                *  Eine Liste der Nummern mit dem zugehörigen Produkt
+                                *  Diese muss abgespeichert werden
+                                */
                                 txtBarcodeValue.setText(intentData);
+                                if (dialog == null || !dialog.isShowing()) {
+                                    dialog = new ScannedBarcodeDialog(ScannedCodeActivity.this, "", intentData, new ScannedBarcodeDialog.scannedBarcodeDialogOnClickListener() {
+                                        @Override
+                                        public void onClicked(int selectedButton, String name, String barcode) {
 
-                            }
+                                        }
+
+                                        @Override
+                                        public void aborted() {
+
+                                        }
+                                    });
+
+                                    dialog.show();
+                                } else {
+                                    if (!dialog.getBarcode().equals(intentData)) {
+                                        dialog.setBarcode(intentData);
+                                    }
+                                }
                         }
                     });
                 }

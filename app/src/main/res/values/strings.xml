@@ -2,8 +2,28 @@
     <string name="app_name">Kuehlschrank Inventar</string>
     <string name="abc">Lebensmittel ausreichend vorhanden!</string>
 
+    <string name="barcode">Barcode</string>
+    <string name="barcode_detector_init_fail">Detektor initialisierung fehlgeschlagen</string>
+
+    <string name="cancel">Abbrechen</string>
+
+    <string name="doublepoint">:</string>
+
+    <string name="listingpoint">•</string>
+
     <string name="menu_scan_barcode">Barcode scannen</string>
     <string name="menu_take_picture">Bild aufnehmen</string>
 
+    <string name="name">Name</string>
+    <string name="no_barcode_detected">Es wurde kein Barcode gefunden</string>
+
     <string name="open_camera">Kamera öffnen</string>
+
+    <string name="permission_denied">Berechtigung abgelehnt</string>
+    <string name="prevent_memory_leaks">Zur Vermeidung von Speicherlecks wurde der Barcode-Scanner gestoppt</string>
+
+    <string name="results">Ergebnisse</string>
+
+    <string name="save">Speichern</string>
+    <string name="space">\u0020</string>
 </resources>

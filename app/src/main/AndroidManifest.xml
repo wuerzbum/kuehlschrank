@@ -9,9 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".scanner.EMailActivity"></activity>
         <activity android:name=".scanner.ScannedCodeActivity" />
-        <activity android:name=".scanner.PictureCodeActivity" />
+        <!-- TODO falls fotografieren gewünscht <activity android:name=".scanner.PictureCodeActivity" /> -->
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

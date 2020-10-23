@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- //TODO falls doch gewünscht, dass man fotografieren kann das folgende wieder "entkommentieren"//TODO falls doch gewünscht, dass man fotografieren kann das folgende wieder "entkommentieren"
     <item
         android:id="@+id/takePicture"
         android:title="@string/menu_take_picture"
         android:orderInCategory="20" />
+    -->
 
     <item
         android:id="@+id/scanBarcode"

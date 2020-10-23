@@ -14,14 +14,13 @@
         android:layout_height="150dp"
         android:layout_centerHorizontal="true" />
 
-    <!-- TODO Text in xml eingeben -->
     <TextView
         android:id="@+id/txtResultsHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
-        android:text="Results"
+        android:text="@string/results"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -42,6 +41,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="5dp"
         android:text="@string/open_camera"
         style="@style/Widget.MyButton"/>
 </RelativeLayout>

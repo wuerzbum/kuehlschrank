@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="multiple_fails_exist">Folgende Fehler sind vorhanden</string>
+
+    <string name="name_already_exist">Der Name ist bereits vorhanden!</string>
+    <string name="name_empty">Es wurde kein Name eingegeben!</string>
+
+    <string name="one_fail_exist">Folgender Fehler ist vorhanden</string>
+
+    <string name="wrong_barcode">Der Barcode darf nicht leer sein!</string>
+</resources>

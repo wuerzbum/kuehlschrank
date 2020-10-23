@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.SparseArray;
@@ -64,8 +65,7 @@ public class PictureCodeActivity extends AppCompatActivity {
                 .build();
 
         if (!detector.isOperational()) {
-            //TODO Text in xml eintragen
-            txtResultBody.setText("Detector initialisation failed");
+            txtResultBody.setText(getString(R.string.barcode_detector_init_fail));
             return;
         }
     }
@@ -78,8 +78,8 @@ public class PictureCodeActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takeBarcodePicture();
                 } else {
-                    //TODO Text in xml eintragen
-                    Toast.makeText(getApplicationContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
+                    finish();
                 }
                 break;
         }
