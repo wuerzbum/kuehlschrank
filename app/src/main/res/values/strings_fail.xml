@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="barcode_exist">Dieser Barcode existiert bereits!</string>
+
     <string name="multiple_fails_exist">Folgende Fehler sind vorhanden</string>
 
     <string name="name_already_exist">Der Name ist bereits vorhanden!</string>

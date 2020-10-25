@@ -9,7 +9,6 @@ import java.util.Set;
 
 public class DefPref {
 
-    public final static String HINTERLEGTE_BARCODE_PRODUKTE = "HINTERLEGTE PRODUKTE";
     private SharedPreferences prefs;
 
     public DefPref(Context context) {
