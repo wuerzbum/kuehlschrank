@@ -26,5 +26,6 @@
     <string name="results">Ergebnisse</string>
 
     <string name="save">Speichern</string>
+    <string name="scan_barcode">Barcode scannen</string>
     <string name="space">\u0020</string>
 </resources>

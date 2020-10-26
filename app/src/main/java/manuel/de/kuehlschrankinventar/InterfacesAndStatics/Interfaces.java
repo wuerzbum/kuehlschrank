@@ -9,4 +9,8 @@ public class Interfaces {
     public interface resultObserver {
         void result(int result);
     }
+
+    public interface information {
+        void inform(int information);
+    }
 }
