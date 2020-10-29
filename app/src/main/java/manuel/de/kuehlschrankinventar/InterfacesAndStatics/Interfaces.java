@@ -3,7 +3,7 @@ package manuel.de.kuehlschrankinventar.InterfacesAndStatics;
 public class Interfaces {
     public interface scannedBarcodeDialogOnClickListener {
         void onClicked(int selectedButton, String name, String barcode, resultObserver resultObserver);
-        void aborted();
+        void abbruch();
     }
 
     public interface resultObserver {

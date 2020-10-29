@@ -2,12 +2,19 @@
     <string name="app_name">Kuehlschrank Inventar</string>
     <string name="abc">Lebensmittel ausreichend vorhanden!</string>
 
+    <string name="benutzer_verwaltung">Benutzerverwaltung</string>
     <string name="barcode">Barcode</string>
+    <string name="barcode_datenbank">Barcode Datenbank</string>
     <string name="barcode_detector_init_fail">Detektor initialisierung fehlgeschlagen</string>
 
     <string name="cancel">Abbrechen</string>
 
     <string name="doublepoint">:</string>
+
+    <string name="einkaufsliste">Einkaufsliste</string>
+    <string name="einstellungen">Einstellungen</string>
+
+    <string name="inventar">Inventarliste</string>
 
     <string name="listingpoint">•</string>
 

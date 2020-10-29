@@ -13,7 +13,7 @@ import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.R;
 
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.OK;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.SELECTED_BUTTON_SAVE;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.AUSGEWAEHLT_TASTE_SPEICHERN;
 
 public class ScannedBarcodeDialog extends AlertDialog {
 
@@ -98,7 +98,7 @@ public class ScannedBarcodeDialog extends AlertDialog {
      */
     private void performCancel() {
         //gibt über den listener zurück, dass der Dialog abgebrochen wurde
-        listener.aborted();
+        listener.abbruch();
         //beendet den Dialog
         dismiss();
     }
@@ -116,7 +116,7 @@ public class ScannedBarcodeDialog extends AlertDialog {
 
         //TODO in ScannedBarcode auch warnen, wenn der Barcode leer ist?
 
-        listener.onClicked(SELECTED_BUTTON_SAVE, nameInput, barcodeInput, new Interfaces.resultObserver() {
+        listener.onClicked(AUSGEWAEHLT_TASTE_SPEICHERN, nameInput, barcodeInput, new Interfaces.resultObserver() {
             @Override
             public void result(int result) {
                 if (result == OK) {

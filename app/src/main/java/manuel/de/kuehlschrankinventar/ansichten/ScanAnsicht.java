@@ -1,8 +1,7 @@
-package manuel.de.kuehlschrankinventar.scanner;
+package manuel.de.kuehlschrankinventar.ansichten;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -28,19 +27,17 @@ import java.io.IOException;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
-import manuel.de.kuehlschrankinventar.datenbank.DefPref;
 import manuel.de.kuehlschrankinventar.dialog.ScannedBarcodeDialog;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
-import manuel.de.kuehlschrankinventar.holder.ProduktManager;
 
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.BARCODE_IST_BEREITS_VORHANDEN;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_BEREITS_VORHANDEN;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_LEER;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.OK;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.REQUEST_CAMERA_PERMISSION;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.ANFRAGE_KAMERA_BERECHTIGUNG;
 
-public class ScannedCodeActivity extends Fragment {
+public class ScanAnsicht extends Fragment {
 
     private SurfaceView surfaceView;
     private TextView txtBarcodeValue;
@@ -51,14 +48,14 @@ public class ScannedCodeActivity extends Fragment {
     private ScannedBarcodeDialog dialog;
     private Interfaces.information informationListener;
 
-    public ScannedCodeActivity(@NonNull Interfaces.information informationListener) {
+    public ScanAnsicht(@NonNull Interfaces.information informationListener) {
         this.informationListener = informationListener;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_scanned_code, container, false);
+        return inflater.inflate(R.layout.ansicht_scan, container, false);
     }
 
     /*
@@ -94,7 +91,7 @@ public class ScannedCodeActivity extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case REQUEST_CAMERA_PERMISSION:
+            case ANFRAGE_KAMERA_BERECHTIGUNG:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         try {
@@ -136,7 +133,7 @@ public class ScannedCodeActivity extends Fragment {
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
                     } else {
-                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, ANFRAGE_KAMERA_BERECHTIGUNG);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -159,7 +156,7 @@ public class ScannedCodeActivity extends Fragment {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                informationListener.inform(StaticInts.CAMERA_RELEASE);
+                informationListener.inform(StaticInts.KAMERA_FREIGABE);
             }
 
             @Override
@@ -191,7 +188,7 @@ public class ScannedCodeActivity extends Fragment {
                                         @Override
                                         public void onClicked(int selectedButton, String name, String barcode, Interfaces.resultObserver resultObserver) {
                                             //TODO warnen, wenn der Barcode leer ist?
-                                            if (selectedButton == StaticInts.SELECTED_BUTTON_SAVE) {
+                                            if (selectedButton == StaticInts.AUSGEWAEHLT_TASTE_SPEICHERN) {
                                                 Produkt produkt = new Produkt(name, barcode);
                                                 int result = activity.getProduktManager().produktHinzufuegen(produkt);
 
@@ -226,7 +223,7 @@ public class ScannedCodeActivity extends Fragment {
                                         }
 
                                         @Override
-                                        public void aborted() {
+                                        public void abbruch() {
 
                                         }
                                     });

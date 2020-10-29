@@ -21,6 +21,11 @@ public class ProduktManager {
     private TreeMap<String, Produkt> barcodeTreemap;
     private TreeMap<String, Produkt> produkte;
 
+    //<"Milch", Produkt>
+    //<"Hafer", Produkt>
+    //<"Käse", Produkt>
+    //<"Apfel", Produkt>
+
     public ProduktManager(DefPref prefs) {
         this.prefs = prefs;
 

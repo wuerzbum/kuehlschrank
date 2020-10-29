@@ -1,6 +1,5 @@
-package manuel.de.kuehlschrankinventar.activity;
+package manuel.de.kuehlschrankinventar.ansichten;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,9 +15,9 @@ import androidx.fragment.app.Fragment;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
-import manuel.de.kuehlschrankinventar.scanner.ScannedCodeActivity;
+import manuel.de.kuehlschrankinventar.activity.MainActivity;
 
-public class MainScreenFragment extends Fragment {
+public class EinkaufslistenAnsicht extends Fragment {
 
     private MainActivity activity;
 
@@ -27,7 +26,7 @@ public class MainScreenFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        return inflater.inflate(R.layout.main_screen, container, false);
+        return inflater.inflate(R.layout.ansicht_einkaufslisten, container, false);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class MainScreenFragment extends Fragment {
 
         activity = ((MainActivity)  getActivity());
 
-        activity.setTitle(activity.getString(R.string.app_name));
+        activity.setTitle(activity.getString(R.string.einkaufsliste));
         initUI();
     }
 
@@ -58,7 +57,7 @@ public class MainScreenFragment extends Fragment {
                 Intent i = new Intent(activity, ScannedCodeActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);*/
-                activity.showUI(StaticInts.SELECTED_SCAN_SCREEN);
+                activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_SCAN_ANSICHT);
                 break;
         }
 

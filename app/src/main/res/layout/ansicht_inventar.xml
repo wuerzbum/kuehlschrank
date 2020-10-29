@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/benutzer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Benutzerverwaltung" />
+
+    <Button
+        android:id="@+id/einstellungen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Einstellungen" />
+
+    <Button
+        android:id="@+id/einkaufsliste"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Einkaufsliste" />
+
+    <Button
+        android:id="@+id/barcode_datenbank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Barcode Datenbank" />
+
+
+
+</LinearLayout>

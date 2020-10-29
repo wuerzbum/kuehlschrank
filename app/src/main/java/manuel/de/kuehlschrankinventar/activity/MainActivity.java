@@ -1,75 +1,97 @@
 package manuel.de.kuehlschrankinventar.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
+import manuel.de.kuehlschrankinventar.ansichten.BarcodeDatenbankAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.BenutzerAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.EinkaufslistenAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.Einstellungen;
+import manuel.de.kuehlschrankinventar.ansichten.InventarAnsicht;
 import manuel.de.kuehlschrankinventar.datenbank.DefPref;
-import manuel.de.kuehlschrankinventar.holder.Inventar;
 import manuel.de.kuehlschrankinventar.holder.ProduktManager;
-import manuel.de.kuehlschrankinventar.scanner.ScannedCodeActivity;
+import manuel.de.kuehlschrankinventar.ansichten.ScanAnsicht;
 
 public class MainActivity extends AppCompatActivity {
 
     private FragmentTransaction ft;
     private DefPref prefs;
-    private ProduktManager pM;
-    public int currentScreen = StaticInts.SELECTED_MAIN_SCREEN;
+    private ProduktManager produktManager;
+    private int aktuelleAnsicht = StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT;
+    private int vorherigeAnsicht = StaticInts.DEFAULT;
 
-    private ScannedCodeActivity scannedCodeActivity;
-    private MainScreenFragment mainScreenFragment;
+    private BarcodeDatenbankAnsicht barcodeDatenbank;
+    private BenutzerAnsicht benutzer;
+    private EinkaufslistenAnsicht einkaufsliste;
+    private Einstellungen einstellungen;
+    private InventarAnsicht inventar;
+    private ScanAnsicht scanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        showUI(StaticInts.SELECTED_MAIN_SCREEN);
+        zeigeAnsicht(StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT);
     }
 
-    public void showUI(int screen) {
-        switch (screen) {
-            case StaticInts.SELECTED_MAIN_SCREEN:
-                openMainScreen();
+    public void zeigeAnsicht(int ansicht) {
+        if (ansicht == vorherigeAnsicht){
+            vorherigeAnsicht = StaticInts.DEFAULT;
+        }else {
+            vorherigeAnsicht = aktuelleAnsicht;
+        }
+
+        switch (ansicht) {
+            case StaticInts.AUSGEWAEHLT_SCAN_ANSICHT:
+                zeigeScanAnsicht();
                 break;
 
-            case StaticInts.SELECTED_SCAN_SCREEN:
-                openScannerScreen();
+            case StaticInts.AUSGEWAEHLT_BENUTZER_ANSICHT:
+                zeigeBenutzerAnsicht();
+                break;
+
+            case StaticInts.AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT:
+                zeigeBarcodeDatenbankAnsicht();
+                break;
+
+            case StaticInts.AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT:
+                zeigeEinkaufslistenAnsicht();
+                break;
+
+            case StaticInts.AUSGEWAEHLT_EINSTELLUNGS_ANSICHT:
+                zeigeEinstellungen();
                 break;
 
             default:
-                openMainScreen();
+                zeigeInventarAnsicht();
         }
     }
 
-    public void openMainScreen() {
-        if (mainScreenFragment == null) {
-            mainScreenFragment = new MainScreenFragment();
+    private void zeigeInventarAnsicht() {
+        if (inventar == null) {
+            inventar = new InventarAnsicht();
         }
         ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, mainScreenFragment);
-        currentScreen = StaticInts.SELECTED_MAIN_SCREEN;
+        ft.replace(R.id.placeholder, inventar);
+        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT;
         ft.commit();
     }
 
-    public void openScannerScreen() {
-        if (scannedCodeActivity == null) {
-            scannedCodeActivity = new ScannedCodeActivity(new Interfaces.information() {
+    private void zeigeScanAnsicht() {
+        if (scanner == null) {
+            scanner = new ScanAnsicht(new Interfaces.information() {
                 @Override
                 public void inform(int information) {
                     //TODO Wenn informationen ankommen
                     switch (information) {
-                        case StaticInts.CAMERA_RELEASE:
-                            showUI(StaticInts.SELECTED_MAIN_SCREEN);
+                        case StaticInts.KAMERA_FREIGABE:
+                            zeigeAnsicht(StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT);
                             break;
                     }
                 }
@@ -77,19 +99,57 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, scannedCodeActivity);
-        currentScreen = StaticInts.SELECTED_SCAN_SCREEN;
+        ft.replace(R.id.placeholder, scanner);
+        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_SCAN_ANSICHT;
+        ft.commit();
+    }
+
+    private void zeigeBenutzerAnsicht(){
+        if (benutzer == null) {
+            benutzer = new BenutzerAnsicht();
+        }
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeholder, benutzer);
+        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_BENUTZER_ANSICHT;
+        ft.commit();
+    }
+
+    private void zeigeBarcodeDatenbankAnsicht(){
+        if (barcodeDatenbank == null) {
+            barcodeDatenbank = new BarcodeDatenbankAnsicht();
+        }
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeholder, barcodeDatenbank);
+        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT;
+        ft.commit();
+    }
+
+    private void zeigeEinkaufslistenAnsicht(){
+        if (einkaufsliste == null) {
+            einkaufsliste = new EinkaufslistenAnsicht();
+        }
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeholder, einkaufsliste);
+        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT;
+        ft.commit();
+    }
+
+    private void zeigeEinstellungen(){
+        if (einstellungen == null) {
+            einstellungen = new Einstellungen();
+        }
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeholder, einstellungen);
+        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_EINSTELLUNGS_ANSICHT;
         ft.commit();
     }
 
     @Override
     public void onBackPressed() {
-        switch (currentScreen) {
-            case StaticInts.SELECTED_SCAN_SCREEN:
-                showUI(StaticInts.SELECTED_MAIN_SCREEN);
-                break;
-            default:
-                super.onBackPressed();
+        if (vorherigeAnsicht == StaticInts.DEFAULT){
+            super.onBackPressed();
+        }else {
+            zeigeAnsicht(vorherigeAnsicht);
         }
     }
 
@@ -101,10 +161,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ProduktManager getProduktManager() {
-        if (pM == null) {
-            pM = new ProduktManager(getPrefs());
+        if (produktManager == null) {
+            produktManager = new ProduktManager(getPrefs());
         }
-        return pM;
+        return produktManager;
     }
 
     public void failedInitUI() {
