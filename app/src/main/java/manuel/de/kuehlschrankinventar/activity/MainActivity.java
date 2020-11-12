@@ -8,28 +8,29 @@ import androidx.fragment.app.FragmentTransaction;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
-import manuel.de.kuehlschrankinventar.ansichten.BarcodeDatenbankAnsicht;
-import manuel.de.kuehlschrankinventar.ansichten.BenutzerAnsicht;
-import manuel.de.kuehlschrankinventar.ansichten.EinkaufslistenAnsicht;
-import manuel.de.kuehlschrankinventar.ansichten.Einstellungen;
-import manuel.de.kuehlschrankinventar.ansichten.InventarAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.*;
 import manuel.de.kuehlschrankinventar.datenbank.DefPref;
-import manuel.de.kuehlschrankinventar.holder.ProduktManager;
+import manuel.de.kuehlschrankinventar.holder.BenutzerManager;
+import manuel.de.kuehlschrankinventar.holder.Einkaufsliste;
+import manuel.de.kuehlschrankinventar.holder.Inventar;
 import manuel.de.kuehlschrankinventar.ansichten.ScanAnsicht;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private FragmentTransaction ft;
     private DefPref prefs;
-    private ProduktManager produktManager;
+    private Inventar inventar;
+    private Einkaufsliste einkaufsliste;
+    private BenutzerManager benutzerManager;
     private int aktuelleAnsicht = StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT;
     private int vorherigeAnsicht = StaticInts.DEFAULT;
 
     private BarcodeDatenbankAnsicht barcodeDatenbank;
     private BenutzerAnsicht benutzer;
-    private EinkaufslistenAnsicht einkaufsliste;
+    private EinkaufslistenAnsicht einkaufslistenansicht;
     private Einstellungen einstellungen;
-    private InventarAnsicht inventar;
+    private InventarAnsicht inventarAnsicht;
     private ScanAnsicht scanner;
 
     @Override
@@ -74,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void zeigeInventarAnsicht() {
-        if (inventar == null) {
-            inventar = new InventarAnsicht();
+        if (inventarAnsicht == null) {
+            inventarAnsicht = new InventarAnsicht();
         }
         ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, inventar);
+        ft.replace(R.id.placeholder, inventarAnsicht);
         aktuelleAnsicht = StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT;
         ft.commit();
     }
@@ -125,11 +126,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void zeigeEinkaufslistenAnsicht(){
-        if (einkaufsliste == null) {
-            einkaufsliste = new EinkaufslistenAnsicht();
+        if (einkaufslistenansicht == null) {
+            einkaufslistenansicht = new EinkaufslistenAnsicht();
         }
         ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, einkaufsliste);
+        ft.replace(R.id.placeholder, einkaufslistenansicht);
         aktuelleAnsicht = StaticInts.AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT;
         ft.commit();
     }
@@ -160,11 +161,25 @@ public class MainActivity extends AppCompatActivity {
         return prefs;
     }
 
-    public ProduktManager getProduktManager() {
-        if (produktManager == null) {
-            produktManager = new ProduktManager(getPrefs());
+    public Inventar getInventar() {
+        if (inventar == null) {
+            inventar = new Inventar(getPrefs());
         }
-        return produktManager;
+        return inventar;
+    }
+
+    public Einkaufsliste getEinkaufsliste() {
+        if (einkaufsliste == null) {
+            einkaufsliste = new Einkaufsliste();
+        }
+        return einkaufsliste;
+    }
+
+    public BenutzerManager getBenutzerManager(){
+        if (benutzerManager == null) {
+            benutzerManager = new BenutzerManager();
+        }
+        return benutzerManager;
     }
 
     public void failedInitUI() {

@@ -180,8 +180,8 @@ public class ScanAnsicht extends Fragment {
                                 */
                                 txtBarcodeValue.setText(intentData);
                                 String name = "";
-                                if (activity.getProduktManager().exisitiertBarcode(intentData)) {
-                                    name = activity.getProduktManager().getProduktMitBarcode(intentData).getName();
+                                if (activity.getInventar().exisitiertBarcode(intentData)) {
+                                    name = activity.getInventar().getProduktMitBarcode(intentData).getName();
                                 }
                                 if (dialog == null || !dialog.isShowing()) {
                                     dialog = new ScannedBarcodeDialog(activity, name, intentData, new Interfaces.scannedBarcodeDialogOnClickListener() {
@@ -190,7 +190,7 @@ public class ScanAnsicht extends Fragment {
                                             //TODO warnen, wenn der Barcode leer ist?
                                             if (selectedButton == StaticInts.AUSGEWAEHLT_TASTE_SPEICHERN) {
                                                 Produkt produkt = new Produkt(name, barcode);
-                                                int result = activity.getProduktManager().produktHinzufuegen(produkt);
+                                                int result = activity.getInventar().produktHinzufuegen(produkt);
 
                                                 if (result != OK) {
                                                     String resultText = "";
