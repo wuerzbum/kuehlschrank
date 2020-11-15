@@ -11,6 +11,7 @@ public class Produkt {
     //TODO eine Liste von Barcodes, dass einem Produkt mehrere Barcodes zugewiesen werden können?
     //String, weil es meist 13 Stellige Zahlen sind, die nicht als integer gespeichert werden können
     private String barcode;
+    private ArrayList<String> list;
 
     /**
      * Neues Produkt erstellen
@@ -57,7 +58,7 @@ public class Produkt {
      */
     public boolean containsBarcode(String checkBarcode) {
         if (!barcode.equals("")) {
-            return barcode == checkBarcode;
+            return barcode.equals(checkBarcode);
         }
         return false;
     }

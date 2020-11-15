@@ -11,40 +11,25 @@ import android.widget.EditText;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.R;
+import manuel.de.kuehlschrankinventar.holder.Produkt;
 
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.OK;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.AUSGEWAEHLT_TASTE_SPEICHERN;
 
-public class ScannedBarcodeDialog extends AlertDialog {
+public class DialogEinscannen extends AlertDialog {
 
     private Activity activity;
-    private Interfaces.scannedBarcodeDialogOnClickListener listener;
+    private Interfaces.scanDialogListener listener;
     private EditText name, barcode;
     private String sBarcode;
-    private String sName;
+    private Produkt altesProdukt;
 
-    /**
-     * Eingescannter Barcode kann hier mit neuem Produkt hinterlegt werden
-     * @param activity Activity übergeben
-     * @param listener Listener für Rückgabe, welcher Button gewählt wurde
-     */
-    public ScannedBarcodeDialog(Activity activity, Interfaces.scannedBarcodeDialogOnClickListener listener) {
-        this(activity, "", "", listener);
-    }
-
-    /**
-     * Eingescannter Barcode kann hier mit neuem Produkt hinterlegt werden
-     * @param activity Activity übergeben
-     * @param name Name des Produktes
-     * @param barcode Barcode des Produktes
-     * @param listener Listener für Rückgabe, welcher Button gewählt wurde
-     */
-    public ScannedBarcodeDialog(Activity activity, String name, String barcode, Interfaces.scannedBarcodeDialogOnClickListener listener) {
-        super(activity);
+    public DialogEinscannen(Activity activity, Produkt altesProdukt, String barcode, Interfaces.scanDialogListener listener) {
+        super(activity, R.style.AppTheme);
 
         this.activity = activity;
         this.listener = listener;
-        this.sName = name;
+        this.altesProdukt = altesProdukt;
         this.sBarcode = barcode;
     }
 
@@ -61,11 +46,13 @@ public class ScannedBarcodeDialog extends AlertDialog {
         barcode = findViewById(R.id.barcode);
         name = findViewById(R.id.produktName);
 
+        //TODO Titel ändern
+
         //Wenn Button "Abbrechen" gedrückt wird die Methode performCancel() ausführen
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performCancel();
+                abbrechen();
             }
         });
 
@@ -73,7 +60,7 @@ public class ScannedBarcodeDialog extends AlertDialog {
         setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                performCancel();
+                abbrechen();
             }
         });
 
@@ -81,7 +68,7 @@ public class ScannedBarcodeDialog extends AlertDialog {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performSave();
+                speichern();
             }
         });
 
@@ -90,13 +77,13 @@ public class ScannedBarcodeDialog extends AlertDialog {
         barcode.setText(sBarcode);
 
         //den Produktnamen im EditText anzeigen
-        name.setText(sName);
+        //TODO name.setText(altesProdukt.getName());
     }
 
     /**
      * beendet den Dialog und führt die Funktion aborted() des listeners aus
      */
-    private void performCancel() {
+    private void abbrechen() {
         //gibt über den listener zurück, dass der Dialog abgebrochen wurde
         listener.abbruch();
         //beendet den Dialog
@@ -107,7 +94,7 @@ public class ScannedBarcodeDialog extends AlertDialog {
      * Wenn die eingegebenen Werte in Ordnung sind, wird der Dialog beendet und die onClicked() Methode des listeners wird ausgeführt
      * Ansonsten wird eine Fehlermeldung angezeigt
      */
-    private void performSave() {
+    private void speichern() {
         String fehlerBeschreibung = "";
 
 
