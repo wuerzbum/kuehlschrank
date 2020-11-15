@@ -4,20 +4,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TreeMap;
 
 public class Produkt {
 
     private String name;
     //TODO eine Liste von Barcodes, dass einem Produkt mehrere Barcodes zugewiesen werden können?
     //String, weil es meist 13 Stellige Zahlen sind, die nicht als integer gespeichert werden können
+    private double menge;
+    private Date verfallsdatum;
+    private double preis;
+    private TreeMap<String, Double> besitzer;
+    private TreeMap<Benutzer, Double>minBestand;
     private String barcode;
+    private String einheit;
+
+
 
     /**
      * Neues Produkt erstellen
      * @param name Name des Produktes
      * @param barcode Barcode des Produktes
      */
-    public Produkt(String name, String barcode) {
+    public Produkt(String name, double cgDouble1, Date cgDate, double cgDouble2, TreeMap cgTreeMap, String barcode) {
         this.name = name;
         this.barcode = barcode;
     }
@@ -100,5 +110,28 @@ public class Produkt {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void geringerBestand(){
+        //TODO: Methode geringerBestand in Klasse Produkt ausarbeiten
+    }
+
+    public double bestandVonBesitzer(String cgString){
+        //TODO: Methode bestandVonBesitzer in Klasse Produkt ausarbeiten
+        return 0.0;
+    }
+
+    public boolean neuerEinkauf(){
+        //TODO: Methode neuerEinauf in Klasse Produkt ausarbeiten
+        return false;
+    }
+
+    public boolean verbrauchen(){
+        //TODO: Methode verbrauchen in Klasse Produkt ausarbeiten
+        return false;
+    }
+
+    public void nutzerBenachrichtigen(){
+        //TODO: Methode nutzerBenachrichtigen in Klasse Produkt ausarbeiten
     }
 }

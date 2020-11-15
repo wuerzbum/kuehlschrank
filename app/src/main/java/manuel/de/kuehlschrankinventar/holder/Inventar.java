@@ -18,7 +18,7 @@ import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings.
 public class Inventar {
 
     private DefPref prefs;
-    private TreeMap<String, Produkt> barcodeTreemap;
+    private TreeMap<String, Produkt> barcodes;
     private TreeMap<String, Produkt> produkte;
 
     //<"Milch", Produkt>
@@ -32,15 +32,15 @@ public class Inventar {
         produkteInitialisieren();
     }
 
-    public boolean exisitiertBarcode(String barcode) {
-        return barcodeTreemap != null && barcodeTreemap.containsKey(barcode);
+    public boolean exisitiertProduktBarcode(String barcode) { //CG: public (laut Ausarbeitung private)?
+        return barcodes != null && barcodes.containsKey(barcode);
     }
 
     public Produkt getProduktMitBarcode(String barcode) {
-        return barcodeTreemap.get(barcode);
+        return barcodes.get(barcode);
     }
 
-    public boolean existiertProduktName(String produktname) {
+    public boolean existiertProduktName(String produktname) { //CG: public (laut Ausarbeitung private)?
         return produkte != null && produkte.containsKey(produktname);
     }
 
@@ -70,19 +70,19 @@ public class Inventar {
         }
     }
 
-    private void produkteLadenVersion1(JSONArray arr) throws JSONException {
-        barcodeTreemap = new TreeMap<>();
+    private void produkteLadenVersion1(JSONArray arr) throws JSONException { //CG: TODO Methode kommt nicht in Ausarbitung 12.11. vor!
+        barcodes = new TreeMap<>();
         produkte = new TreeMap<>();
         for (int i = 1; i<arr.length(); i++) {
             Produkt tempProdukt = new Produkt(arr.getString(i));
             produkte.put(tempProdukt.getName(), tempProdukt);
             if (tempProdukt.hatBarcode()) {
-                barcodeTreemap.put(tempProdukt.getBarcode(), tempProdukt);
+                barcodes.put(tempProdukt.getBarcode(), tempProdukt);
             }
         }
 
-        if (barcodeTreemap.size() == 0) {
-            barcodeTreemap = null;
+        if (barcodes.size() == 0) {
+            barcodes = null;
         }
     }
 
@@ -96,7 +96,7 @@ public class Inventar {
         prefs.setString(HINTERLEGTE_PRODUKTE, new JSONArray(tempList).toString());
     }
 
-    public int produktHinzufuegen(Produkt neuesProdukt) {
+    public int neuesProdukt(Produkt neuesProdukt) {
         int returnState = OK;
         if (produkte == null) {
             produkte = new TreeMap<>();
@@ -108,10 +108,10 @@ public class Inventar {
             returnState |= NAME_IST_BEREITS_VORHANDEN;
         }
         if (neuesProdukt.hatBarcode()) {
-            if (barcodeTreemap == null) {
-                barcodeTreemap = new TreeMap<>();
+            if (barcodes == null) {
+                barcodes = new TreeMap<>();
             }
-            if (exisitiertBarcode(neuesProdukt.getBarcode())) {
+            if (exisitiertProduktBarcode(neuesProdukt.getBarcode())) {
                 returnState |= BARCODE_IST_BEREITS_VORHANDEN;
             }
         }
@@ -121,7 +121,7 @@ public class Inventar {
 
         produkte.put(neuesProdukt.getName(), neuesProdukt);
         if (neuesProdukt.hatBarcode()) {
-            barcodeTreemap.put(neuesProdukt.getBarcode(), neuesProdukt);
+            barcodes.put(neuesProdukt.getBarcode(), neuesProdukt);
         }
 
         produkteSpeichern();
@@ -129,11 +129,13 @@ public class Inventar {
         return returnState;
     }
 
-    private void produktBearbeiten(Produkt altesProdukt, Produkt neuesProdukt) {
+    private int produktBearbeiten(Produkt altesProdukt, Produkt neuesProdukt) {
         //TODO produkt bearbeiten
+        return 0; //CG: geändert von void-Funktion zu int laut Ausarbeitung 12.11.
     }
 
-    private void produktEntfernen(Produkt produkt) {
+    private boolean produktEntfernen(Produkt produkt) {
         //TODO produkt entfernen
+        return false; //CG: geändert von void-Funktion zu boolean laut Ausarbeitung 12.11.
     }
 }
