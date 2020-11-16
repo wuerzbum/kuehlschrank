@@ -10,10 +10,10 @@ public class Benutzer {
     private TreeMap<Date, Double> ausgaben;
     private double budget;
 
-    public void Benutzer(String cgString, double cgDouble){ //CG: Funktion ohne Rückgabewert (void)?
+    public Benutzer(String cgString, double cgDouble){ //CG: Funktion ohne Rückgabewert (void)?
         //TODO: Methode Benutzer in Klasse Benutzer ausarbeiten
     }
-    public void neuerEinkauf(double cgDouble) { //CG: Funktion ohne Rückgabewert (void)?
+    public void neuerEinkauf(double cgDouble) {
         //TODO: Methode neuerEinkauf in Klasse Benutzer ausarbeiten
     }
 }

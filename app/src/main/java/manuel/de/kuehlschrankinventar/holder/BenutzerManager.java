@@ -7,7 +7,7 @@ public class BenutzerManager {
 
     private TreeMap<String, Benutzer> benutzer;
 
-    public void Benutzermanager(DefPref cgPref){ //CG: Funktion ohne Rückgabewert (void)?
+    public BenutzerManager(DefPref cgPref){
         //TODO: Methode Benutzermanager in Klasse BenutzerManager ausarbeiten
     }
     private void benutzerInitialisieren(){
