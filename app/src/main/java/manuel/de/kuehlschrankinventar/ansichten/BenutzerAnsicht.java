@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import manuel.de.kuehlschrankinventar.activity.MainActivity;
 public class BenutzerAnsicht extends Fragment {
 
     private MainActivity activity;
+    private ListView benutzerListenAnsicht;
 
     @Nullable
     @Override
@@ -80,4 +82,17 @@ public class BenutzerAnsicht extends Fragment {
             activity.failedInitUI();
         }
     }
+
+    private void initBenutzerListe(){
+        //TODO: Methode Programmieren
+    }
+
+    private void neuenBenutzerHinzufuegen(){
+        //TODO: Methode Programmieren
+    }
+
+    private void listenerBenutzer(){
+        //TODO: Methode Programmieren
+    }
+
 }
