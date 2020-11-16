@@ -67,7 +67,7 @@ public class Produkt {
      */
     public boolean containsBarcode(String checkBarcode) {
         if (!barcode.equals("")) {
-            return barcode == checkBarcode;
+            return barcode.equals(checkBarcode);
         }
         return false;
     }

@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
     android:background="@color/primaryLightColor">
@@ -10,10 +10,9 @@
     <TextView
         android:id="@+id/title"
         android:gravity="start"
-        android:text="test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/primaryDarkColor" />
@@ -21,7 +20,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1">
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +44,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/primaryDarkColor" />
+                        android:textColor="@color/primaryDarkColor"
+                        android:backgroundTint="@color/primaryDarkColor"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin" />
                 </LinearLayout>
             </TableRow>
 
@@ -68,7 +69,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="@color/primaryDarkColor" />
+                        android:textColor="@color/primaryDarkColor"
+                        android:backgroundTint="@color/primaryDarkColor"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"/>
                 </LinearLayout>
             </TableRow>
         </TableLayout>

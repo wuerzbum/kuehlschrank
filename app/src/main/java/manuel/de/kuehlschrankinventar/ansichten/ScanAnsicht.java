@@ -23,11 +23,12 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
-import manuel.de.kuehlschrankinventar.dialog.ScannedBarcodeDialog;
+import manuel.de.kuehlschrankinventar.dialog.DialogEinscannen;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
 
@@ -45,7 +46,7 @@ public class ScanAnsicht extends Fragment {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private String intentData = "";
-    private ScannedBarcodeDialog dialog;
+    private DialogEinscannen dialog;
     private Interfaces.information informationListener;
 
     public ScanAnsicht(@NonNull Interfaces.information informationListener) {
@@ -82,7 +83,12 @@ public class ScanAnsicht extends Fragment {
 
         activity = ((MainActivity) getActivity());
 
-        activity.setTitle(activity.getString(R.string.scan_barcode));
+        try {
+            assert activity != null;
+            activity.setTitle(activity.getString(R.string.scan_barcode));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         initViews();
         initialiseDetectorsAndSources();
     }
@@ -108,8 +114,8 @@ public class ScanAnsicht extends Fragment {
 
     private void initViews() {
         try {
-            txtBarcodeValue = getView().findViewById(R.id.txtBarcodeValue);
-            surfaceView = getView().findViewById(R.id.surfaceView);
+            txtBarcodeValue = requireView().findViewById(R.id.txtBarcodeValue);
+            surfaceView = requireView().findViewById(R.id.surfaceView);
         } catch (NullPointerException e) {
             e.printStackTrace();
             activity.failedInitUI();
@@ -184,7 +190,7 @@ public class ScanAnsicht extends Fragment {
                                     name = activity.getInventar().getProduktMitBarcode(intentData).getName();
                                 }
                                 if (dialog == null || !dialog.isShowing()) {
-                                    dialog = new ScannedBarcodeDialog(activity, name, intentData, new Interfaces.scannedBarcodeDialogOnClickListener() {
+                                    dialog = new DialogEinscannen(activity, null/*name*/, intentData, new Interfaces.scanDialogListener() {
                                         @Override
                                         public void onClicked(int selectedButton, String name, String barcode, Interfaces.resultObserver resultObserver) {
                                             //TODO warnen, wenn der Barcode leer ist?

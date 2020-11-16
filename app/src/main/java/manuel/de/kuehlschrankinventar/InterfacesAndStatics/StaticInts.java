@@ -12,6 +12,8 @@ public class StaticInts {
             AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT = 5,
             AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT = 6,
             AUSGEWAEHLT_EINSTELLUNGS_ANSICHT = 7,
+            AUSGEWAEHLT_JA = 8,
+            AUSGEWAEHLT_NEIN = 9,
             ANFRAGE_KAMERA_BERECHTIGUNG = 201;
 
     //Binäre Integer für Flaggensetzung

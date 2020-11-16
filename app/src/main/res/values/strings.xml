@@ -6,6 +6,8 @@
     <string name="barcode">Barcode</string>
     <string name="barcode_datenbank">Barcode Datenbank</string>
     <string name="barcode_detector_init_fail">Detektor initialisierung fehlgeschlagen</string>
+    <string name="bearbeiten">Bearbeiten</string>
+    <string name="benutzer">Benutzer</string>
 
     <string name="cancel">Abbrechen</string>
 
@@ -13,6 +15,7 @@
 
     <string name="einkaufsliste">Einkaufsliste</string>
     <string name="einstellungen">Einstellungen</string>
+    <string name="erstellen">Erstellen</string>
 
     <string name="inventar">Inventarliste</string>
 
@@ -23,16 +26,20 @@
 
     <string name="name">Name</string>
     <string name="new_barcode_setted">Der Barcode wurde überschrieben!</string>
+    <string name="no">Nein</string>
     <string name="no_barcode_detected">Es wurde kein Barcode gefunden</string>
 
     <string name="open_camera">Kamera öffnen</string>
 
     <string name="permission_denied">Berechtigung abgelehnt</string>
     <string name="prevent_memory_leaks">Zur Vermeidung von Speicherlecks wurde der Barcode-Scanner gestoppt</string>
+    <string name="produkt">Produkt</string>
 
     <string name="results">Ergebnisse</string>
 
     <string name="save">Speichern</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="space">\u0020</string>
+
+    <string name="yes">Ja</string>
 </resources>
