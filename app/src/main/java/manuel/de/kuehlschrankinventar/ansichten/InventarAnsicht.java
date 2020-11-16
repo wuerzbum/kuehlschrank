@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,10 @@ import manuel.de.kuehlschrankinventar.activity.MainActivity;
 public class InventarAnsicht extends Fragment {
 
     private MainActivity activity;
+    private ListView produktListenAnsicht;
+
+
+
 
     @Nullable
     @Override
@@ -106,5 +111,18 @@ public class InventarAnsicht extends Fragment {
             activity.failedInitUI();
         }
     }
+
+    private void initProduktListe(){
+        //TODO: Methode Programmieren
+    }
+
+    private void neuesProduktHinzufuegen(){
+        //TODO: Methode Programmieren
+    }
+
+    private void ListenerNeuesProdukt(){
+        //TODO: Methode Programmieren
+    }
+
 }
 

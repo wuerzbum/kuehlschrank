@@ -39,13 +39,13 @@ import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.ANF
 
 public class ScanAnsicht extends Fragment {
 
-    private SurfaceView surfaceView;
-    private TextView txtBarcodeValue;
+    private SurfaceView kameraAnsicht;
+    private TextView gelesenerBarcodeAnzeigen;
     private MainActivity activity;
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
-    private String intentData = "";
-    private ScannedBarcodeDialog dialog;
+    private String gelesenerBarcode = "";
+    private ScannedBarcodeDialog produktDialog;
     private Interfaces.information informationListener;
 
     public ScanAnsicht(@NonNull Interfaces.information informationListener) {
@@ -83,8 +83,8 @@ public class ScanAnsicht extends Fragment {
         activity = ((MainActivity) getActivity());
 
         activity.setTitle(activity.getString(R.string.scan_barcode));
-        initViews();
-        initialiseDetectorsAndSources();
+        initAnsichten();
+        initDetectorUndQuelle();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ScanAnsicht extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         try {
-                            cameraSource.start(surfaceView.getHolder());
+                            cameraSource.start(kameraAnsicht.getHolder());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -106,17 +106,17 @@ public class ScanAnsicht extends Fragment {
         }
     }
 
-    private void initViews() {
+    private void initAnsichten() {
         try {
-            txtBarcodeValue = getView().findViewById(R.id.txtBarcodeValue);
-            surfaceView = getView().findViewById(R.id.surfaceView);
+            gelesenerBarcodeAnzeigen = getView().findViewById(R.id.txtBarcodeValue);
+            kameraAnsicht = getView().findViewById(R.id.surfaceView);
         } catch (NullPointerException e) {
             e.printStackTrace();
             activity.failedInitUI();
         }
     }
 
-    private void initialiseDetectorsAndSources() {
+    private void initDetectorUndQuelle() {
         barcodeDetector = new BarcodeDetector.Builder(activity)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
@@ -126,12 +126,12 @@ public class ScanAnsicht extends Fragment {
                 .setAutoFocusEnabled(true)
                 .build();
 
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+        kameraAnsicht.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(@NonNull SurfaceHolder holder) {
                 try {
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        cameraSource.start(surfaceView.getHolder());
+                        cameraSource.start(kameraAnsicht.getHolder());
                     } else {
                         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, ANFRAGE_KAMERA_BERECHTIGUNG);
                     }
@@ -163,11 +163,11 @@ public class ScanAnsicht extends Fragment {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
-                    txtBarcodeValue.post(new Runnable() {
+                    gelesenerBarcodeAnzeigen.post(new Runnable() {
 
                         @Override
                         public void run() {
-                                intentData = barcodes.valueAt(0).displayValue;
+                                gelesenerBarcode = barcodes.valueAt(0).displayValue;
                                 /*TODO Barcodeverarbeiten
                                 *  Produkte haben immer denselben Barcode
                                 *  Barcode APIs (mit denen der Barcode direkt ausgewertet werden können)
@@ -178,13 +178,13 @@ public class ScanAnsicht extends Fragment {
                                 *  Eine Liste der Nummern mit dem zugehörigen Produkt
                                 *  Diese muss abgespeichert werden
                                 */
-                                txtBarcodeValue.setText(intentData);
+                                gelesenerBarcodeAnzeigen.setText(gelesenerBarcode);
                                 String name = "";
-                                if (activity.getInventar().exisitiertBarcode(intentData)) {
-                                    name = activity.getInventar().getProduktMitBarcode(intentData).getName();
+                                if (activity.getInventar().exisitiertBarcode(gelesenerBarcode)) {
+                                    name = activity.getInventar().getProduktMitBarcode(gelesenerBarcode).getName();
                                 }
-                                if (dialog == null || !dialog.isShowing()) {
-                                    dialog = new ScannedBarcodeDialog(activity, name, intentData, new Interfaces.scannedBarcodeDialogOnClickListener() {
+                                if (produktDialog == null || !produktDialog.isShowing()) {
+                                    produktDialog = new ScannedBarcodeDialog(activity, name, gelesenerBarcode, new Interfaces.scannedBarcodeDialogOnClickListener() {
                                         @Override
                                         public void onClicked(int selectedButton, String name, String barcode, Interfaces.resultObserver resultObserver) {
                                             //TODO warnen, wenn der Barcode leer ist?
@@ -228,11 +228,11 @@ public class ScanAnsicht extends Fragment {
                                         }
                                     });
 
-                                    dialog.show();
+                                    produktDialog.show();
                                 } else {
-                                    if (!dialog.getBarcode().equals(intentData)) {
+                                    if (!produktDialog.getBarcode().equals(gelesenerBarcode)) {
                                         //TODO Name wieder löschen?
-                                        dialog.setBarcode(intentData);
+                                        produktDialog.setBarcode(gelesenerBarcode);
                                         Toast.makeText(activity, getString(R.string.new_barcode_setted), Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -241,5 +241,9 @@ public class ScanAnsicht extends Fragment {
                 }
             }
         });
+    }
+
+    private void starteProduktDialog(){
+        //TODO: Methode Programmieren
     }
 }

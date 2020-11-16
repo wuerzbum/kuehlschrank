@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import manuel.de.kuehlschrankinventar.activity.MainActivity;
 public class BarcodeDatenbankAnsicht extends Fragment {
 
     private MainActivity activity;
+    private ListView barcodeDatenbankenAnsicht;
 
     @Nullable
     @Override
@@ -79,5 +81,17 @@ public class BarcodeDatenbankAnsicht extends Fragment {
             e.printStackTrace();
             activity.failedInitUI();
         }
+    }
+
+    private void initBarcodeListe(){
+        //TODO: Methode Programmieren
+    }
+
+    private void neuenBarcodeHinzufuegen(){
+        //TODO: Methode Programmieren
+    }
+
+    private void listenerNeuerBarcode(){
+        //TODO: Methode Programmieren
     }
 }
