@@ -27,7 +27,8 @@ public class Produkt {
      * @param name Name des Produktes
      * @param barcode Barcode des Produktes
      */
-    public Produkt(String name, double cgDouble1, Date cgDate, double cgDouble2, TreeMap cgTreeMap, String barcode) {
+    public Produkt(String name, double cgDouble1, Date cgDate, double cgDouble2, TreeMap <String, Double>cgTreeMap, TreeMap <Benutzer, Double> minBestand, String barcode, String einheit) {
+
         this.name = name;
         this.barcode = barcode;
     }
