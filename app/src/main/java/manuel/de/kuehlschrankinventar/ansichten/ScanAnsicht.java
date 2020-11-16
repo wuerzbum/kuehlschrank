@@ -27,7 +27,7 @@ import java.io.IOException;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
-import manuel.de.kuehlschrankinventar.dialog.ScannedBarcodeDialog;
+import manuel.de.kuehlschrankinventar.dialog.DialogEinscannen;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
 
@@ -45,7 +45,7 @@ public class ScanAnsicht extends Fragment {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private String gelesenerBarcode = "";
-    private ScannedBarcodeDialog produktDialog;
+    private DialogEinscannen produktDialog;
     private Interfaces.information informationListener;
 
     public ScanAnsicht(@NonNull Interfaces.information informationListener) {
@@ -185,18 +185,18 @@ public class ScanAnsicht extends Fragment {
                                 */
                                 gelesenerBarcodeAnzeigen.setText(gelesenerBarcode);
                                 String name = "";
-                                if (activity.getInventar().exisitiertBarcode(gelesenerBarcode)) {
+                                if (activity.getInventar().exisitiertProduktBarcode(gelesenerBarcode)) {
                                     name = activity.getInventar().getProduktMitBarcode(gelesenerBarcode).getName();
                                 }
                                 if (produktDialog == null || !produktDialog.isShowing()) {
-                                    produktDialog = new ScannedBarcodeDialog(activity, name, gelesenerBarcode, new Interfaces.scannedBarcodeDialogOnClickListener() {
+                                    /*TODO produktDialog = new DialogEinscannen(activity, name, gelesenerBarcode, new Interfaces.scanDialogListener() {
                                         @Override
                                         public void onClicked(int selectedButton, String name, String barcode, Interfaces.resultObserver resultObserver) {
                                             //TODO warnen, wenn der Barcode leer ist?
                                             if (selectedButton == StaticInts.AUSGEWAEHLT_TASTE_SPEICHERN) {
-                                                Produkt produkt = new Produkt(name, barcode);
-                                                int result = activity.getInventar().produktHinzufuegen(produkt);
-
+                                                //TODO Produkt produkt = new Produkt(name, barcode);
+                                                //int result = activity.getInventar().neuesProdukt(produkt);
+/*
                                                 if (result != OK) {
                                                     String resultText = "";
                                                     if ((result & NAME_IST_LEER) == NAME_IST_LEER) {
@@ -222,8 +222,9 @@ public class ScanAnsicht extends Fragment {
 
                                                     Toast.makeText(activity, resultText, Toast.LENGTH_SHORT).show();
                                                 }
+                                               resultObserver.result(result);
 
-                                                resultObserver.result(result);
+                                                resultObserver.result(0);
                                             }
                                         }
 
@@ -233,7 +234,7 @@ public class ScanAnsicht extends Fragment {
                                         }
                                     });
 
-                                    produktDialog.show();
+                                    produktDialog.show();*/
                                 } else {
                                     if (!produktDialog.getBarcode().equals(gelesenerBarcode)) {
                                         //TODO Name wieder löschen?

@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     public BenutzerManager getBenutzerManager(){
         if (benutzerManager == null) {
-            benutzerManager = new BenutzerManager();
+            benutzerManager = new BenutzerManager(prefs);
         }
         return benutzerManager;
     }
