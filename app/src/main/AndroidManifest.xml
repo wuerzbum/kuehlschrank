@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ansichten.ScanAnsicht"
+            android:screenOrientation="portrait"
             android:configChanges="screenSize|orientation" />
     </application>
 

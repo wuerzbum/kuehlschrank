@@ -16,18 +16,4 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true" />
-
-    <TextView
-        android:id="@+id/txtBarcodeValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:text="@string/no_barcode_detected"
-        android:textColor="@color/primaryDarkColor"
-        android:textSize="20sp"
-        android:background="@color/primaryLightColor"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"/>
 </RelativeLayout>

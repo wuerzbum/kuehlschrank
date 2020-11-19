@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
 
@@ -61,6 +64,25 @@ public class BarcodeDatenbankAnsicht extends MyFragmentAnsicht {
 
     private void initUI() {
         //TODO initUI
+        try {
+            FloatingActionButton produktMitBarcodeErstellen = requireView().findViewById(R.id.fab);
+            ListView listenAnzeige = requireView().findViewById(R.id.list);
+            requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.GONE);
+
+            if (listenAnzeige.getChildCount() == 0) {
+                requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.VISIBLE);
+            }
+
+            produktMitBarcodeErstellen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO siehe Toast Text
+                    Toast.makeText(activity, "Produkt mit Barcode erstellen (zuerst Barcode einscannen und danach Produktdialog mit eingelesenem Barcode starten)", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initBarcodeListe(){

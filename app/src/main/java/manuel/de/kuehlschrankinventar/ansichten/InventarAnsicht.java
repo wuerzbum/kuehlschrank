@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
@@ -63,6 +66,25 @@ public class InventarAnsicht extends MyFragmentAnsicht {
 
     private void initUI() {
         //TODO initUI
+        try {
+            FloatingActionButton produktErstellen = requireView().findViewById(R.id.fab);
+            ListView listenAnzeige = requireView().findViewById(R.id.list);
+            requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.GONE);
+
+            if (listenAnzeige.getChildCount() == 0) {
+                requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.VISIBLE);
+            }
+
+            produktErstellen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO siehe Toast Text
+                    Toast.makeText(activity, "Produkt erstellen (Produkterstellungsdialog starten)", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initProduktListe(){

@@ -15,6 +15,7 @@ public class StaticInts {
             AUSGEWAEHLT_JA = 8,
             AUSGEWAEHLT_NEIN = 9,
             RESULT_OK = 10,
+            SPEICHER_VERSION_1 = 11,
             ANFRAGE_KAMERA_BERECHTIGUNG = 201;
 
     //Binäre Integer für Flaggensetzung

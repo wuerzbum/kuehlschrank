@@ -1,16 +1,16 @@
 package manuel.de.kuehlschrankinventar.holder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeMap;
+
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings.*;
 
 public class Produkt {
 
     private String name;
-    //TODO eine Liste von Barcodes, dass einem Produkt mehrere Barcodes zugewiesen werden können?
     //String, weil es meist 13 Stellige Zahlen sind, die nicht als integer gespeichert werden können
     private double menge;
     private Date verfallsdatum;
@@ -19,8 +19,6 @@ public class Produkt {
     private TreeMap<Benutzer, Double>minBestand;
     private String barcode;
     private String einheit;
-
-
 
     /**
      * Neues Produkt erstellen
@@ -34,13 +32,15 @@ public class Produkt {
     }
 
     public Produkt(String jsonString) {
-        mitJSONStringLaden(jsonString);
+        if (!jsonString.equals("")) {
+            try {
+                mitJSONStringLaden(jsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    /**
-     * Neuen Namen setzen
-     * @param newName neuer Produktname
-     */
     public void setName(String newName) {
         this.name = newName;
     }
@@ -93,26 +93,6 @@ public class Produkt {
         barcode = "";
     }
 
-    public String getSaveString() {
-        ArrayList<String> tempList = new ArrayList<>();
-        tempList.add(name);
-        tempList.add(barcode);
-
-        return new JSONArray(tempList).toString();
-    }
-
-    private void mitJSONStringLaden(String jsonString) {
-        try {
-            JSONArray arr = new JSONArray(jsonString);
-            int counter = 0;
-            setName(arr.getString(counter));
-            counter++;
-            setBarcode(arr.getString(counter));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void geringerBestand(){
         //TODO: Methode geringerBestand in Klasse Produkt ausarbeiten
     }
@@ -134,5 +114,38 @@ public class Produkt {
 
     public void nutzerBenachrichtigen(){
         //TODO: Methode nutzerBenachrichtigen in Klasse Produkt ausarbeiten
+    }
+
+    public String getSaveString() {
+        try {
+            JSONObject saveObj = new JSONObject();
+
+            saveObj.put(PRODUKTNAME, name);
+            saveObj.put(BARCODE, barcode);
+            //TODO weitere inhalte einfügen
+
+            return saveObj.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "";
+        }
+        /*
+            private String name;
+            //String, weil es meist 13 Stellige Zahlen sind, die nicht als integer gespeichert werden können
+            private double menge;
+            private Date verfallsdatum;
+            private double preis;
+            private TreeMap<String, Double> besitzer;
+            private TreeMap<Benutzer, Double>minBestand;
+            private String barcode;
+            private String einheit;
+         */
+    }
+
+    private void mitJSONStringLaden(String jsonString) throws JSONException {
+        JSONObject object = new JSONObject(jsonString);
+        setName(object.getString(PRODUKTNAME));
+        setBarcode(object.getString(BARCODE));
+        //TODO weitere inhalte einfügen
     }
 }

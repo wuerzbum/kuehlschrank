@@ -1,26 +1,30 @@
 <resources>
     <string name="app_name">Kuehlschrank Inventar</string>
-    <string name="ansicht_barcode_datenbank">Barcodedatenbank</string>
+    <string name="ansicht_barcode_datenbank">Barcode-\ndatenbank</string>
     <string name="ansicht_benutzer">Benutzer</string>
-    <string name="ansicht_einkaufsliste">Einkaufsliste</string>
+    <string name="ansicht_einkaufsliste">Einkaufs-\nliste</string>
     <string name="ansicht_inventar">Inventar</string>
 
     <string name="benutzer_verwaltung">Benutzerverwaltung</string>
     <string name="barcode">Barcode</string>
     <string name="barcode_datenbank">Barcode Datenbank</string>
+    <string name="barcode_datenbank_leer">Es wurde keinem Produkt ein Barcode zugeordnet!</string>
     <string name="barcode_detector_init_fail">Detektor initialisierung fehlgeschlagen</string>
     <string name="bearbeiten">Bearbeiten</string>
     <string name="benutzer">Benutzer</string>
+    <string name="benutzer_leer">Es wurde noch kein Benutzer angelegt!</string>
 
     <string name="cancel">Abbrechen</string>
 
     <string name="doublepoint">:</string>
 
     <string name="einkaufsliste">Einkaufsliste</string>
+    <string name="einkaufsliste_leer">Es wurde noch kein Produkt der Einkaufsliste Hinzugefügt!</string>
     <string name="einstellungen">Einstellungen</string>
     <string name="erstellen">Erstellen</string>
 
     <string name="inventar">Inventarliste</string>
+    <string name="inventar_leer">Es ist noch kein Produkt in Ihrem Besitz!</string>
 
     <string name="listingpoint">•</string>
 

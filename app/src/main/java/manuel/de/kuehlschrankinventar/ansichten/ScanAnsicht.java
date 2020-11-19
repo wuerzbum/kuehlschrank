@@ -44,11 +44,8 @@ import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.ANF
 public class ScanAnsicht extends AppCompatActivity {
 
     private SurfaceView kameraAnsicht;
-    private TextView gelesenerBarcodeAnzeigen;
-    private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private String gelesenerBarcode = "";
-    private DialogEinscannen produktDialog;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -76,7 +73,6 @@ public class ScanAnsicht extends AppCompatActivity {
 
     private void initAnsichten() {
         try {
-            gelesenerBarcodeAnzeigen = findViewById(R.id.txtBarcodeValue);
             kameraAnsicht = findViewById(R.id.surfaceView);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -86,7 +82,7 @@ public class ScanAnsicht extends AppCompatActivity {
     }
 
     private void initDetectorUndQuelle() {
-        barcodeDetector = new BarcodeDetector.Builder(this)
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
 
@@ -100,13 +96,6 @@ public class ScanAnsicht extends AppCompatActivity {
             public void surfaceCreated(@NonNull SurfaceHolder holder) {
                 try {
                     if (ActivityCompat.checkSelfPermission(ScanAnsicht.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
                         setResult(DEFAULT);
                         finish();
                     }
@@ -132,100 +121,24 @@ public class ScanAnsicht extends AppCompatActivity {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                // TODO ? informationListener.inform(StaticInts.KAMERA_FREIGABE);
+
             }
 
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
-                    gelesenerBarcodeAnzeigen.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                                gelesenerBarcode = barcodes.valueAt(0).displayValue;
-                                /*TODO Barcodeverarbeiten
-                                *  Produkte haben immer denselben Barcode
-                                *  Barcode APIs (mit denen der Barcode direkt ausgewertet werden können)
-                                *  kosten Geld (pro Zugriff / Monatlich)
-                                *  Vorschlag: wenn eine Nummer gescannt wird, wird der Nutzer aufgefordert Daten für dieses Produkt zu hinterlegen
-                                *  sollte bereits ein Produkt zu Nummer gespeichert sein, dann wird dieses direkt übernommen
-                                *  Notwendig hierfür:
-                                *  Eine Liste der Nummern mit dem zugehörigen Produkt
-                                *  Diese muss abgespeichert werden
-                                */
-                                gelesenerBarcodeAnzeigen.setText(gelesenerBarcode);
-                                Intent result = new Intent();
-                                result.putExtra(StaticStrings.BARCODE, gelesenerBarcode);
-                                setResult(StaticInts.RESULT_OK, result);
-                                finish();
-                                //TODO Ok Button um Barcode zu übernehmen?
-                                /*String name = "";
-                                if (activity.getInventar().exisitiertProduktBarcode(gelesenerBarcode)) {
-                                    name = activity.getInventar().getProduktMitBarcode(gelesenerBarcode).getName();
-                                }
-                                if (produktDialog == null || !produktDialog.isShowing()) {
-                                    /*TODO produktDialog = new DialogEinscannen(activity, name, gelesenerBarcode, new Interfaces.scanDialogListener() {
-                                        @Override
-                                        public void onClicked(int selectedButton, String name, String barcode, Interfaces.resultObserver resultObserver) {
-                                            //TODO warnen, wenn der Barcode leer ist?
-                                            if (selectedButton == StaticInts.AUSGEWAEHLT_TASTE_SPEICHERN) {
-                                                //TODO Produkt produkt = new Produkt(name, barcode);
-                                                //int result = activity.getInventar().neuesProdukt(produkt);
-/*
-                                                if (result != OK) {
-                                                    String resultText = "";
-                                                    if ((result & NAME_IST_LEER) == NAME_IST_LEER) {
-                                                        resultText += getString(R.string.listingpoint) + getString(R.string.space) + getString(R.string.name_empty);
-                                                    }
-                                                    if ((result & NAME_IST_BEREITS_VORHANDEN) == NAME_IST_BEREITS_VORHANDEN) {
-                                                        if (!resultText.equals("")) {
-                                                            resultText += "\n";
-                                                        }
-                                                        resultText += getString(R.string.listingpoint) + getString(R.string.space) + getString(R.string.name_already_exist);
-                                                    }
-                                                    if ((result & BARCODE_IST_BEREITS_VORHANDEN) == BARCODE_IST_BEREITS_VORHANDEN) {
-                                                        if (!resultText.equals("")) {
-                                                            resultText += "\n";
-                                                        }
-                                                        resultText += getString(R.string.listingpoint) + getString(R.string.space) + getString(R.string.barcode_exist);
-                                                    }
-                                                    if (resultText.split("\n").length > 1) {
-                                                        resultText = getString(R.string.multiple_fails_exist) + getString(R.string.doublepoint) + "\n" + resultText;
-                                                    } else {
-                                                        resultText = getString(R.string.one_fail_exist) + getString(R.string.doublepoint) + "\n" + resultText;
-                                                    }
-
-                                                    Toast.makeText(activity, resultText, Toast.LENGTH_SHORT).show();
-                                                }
-                                               resultObserver.result(result);
-
-                                                resultObserver.result(0);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void abbruch() {
-
-                                        }
-                                    });
-
-                                    produktDialog.show();/
-                                } else {
-                                    if (!produktDialog.getBarcode().equals(gelesenerBarcode)) {
-                                        //TODO Name wieder löschen?
-                                        produktDialog.setBarcode(gelesenerBarcode);
-                                        Toast.makeText(activity, getString(R.string.new_barcode_setted), Toast.LENGTH_SHORT).show();
-                                    }
-                                }*/
-                        }
-                    });
+                    Intent result = new Intent();
+                    String tempBarcode = barcodes.valueAt(0).displayValue;
+                    if (tempBarcode.equals(gelesenerBarcode)) {
+                        result.putExtra(StaticStrings.BARCODE, tempBarcode);
+                        setResult(StaticInts.RESULT_OK, result);
+                        finish();
+                    } else {
+                        gelesenerBarcode = tempBarcode;
+                    }
                 }
             }
         });
-    }
-
-    private void starteProduktDialog(){
-        //TODO: Methode Programmieren
     }
 }

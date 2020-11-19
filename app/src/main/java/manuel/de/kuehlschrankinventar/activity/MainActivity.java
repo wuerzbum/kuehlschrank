@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             final FragmentPageAdapter fa = new FragmentPageAdapter(getSupportFragmentManager(), tabNamen, fragments);
 
             viewPager.setAdapter(fa);
-            viewPager.setOffscreenPageLimit(2);
+            viewPager.setOffscreenPageLimit(3);
 
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 

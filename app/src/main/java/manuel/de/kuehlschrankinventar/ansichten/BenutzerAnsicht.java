@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
@@ -59,6 +62,25 @@ public class BenutzerAnsicht extends MyFragmentAnsicht {
 
     private void initUI() {
         //TODO InitUI
+        try {
+            FloatingActionButton neuenBenutzerAnlegen = requireView().findViewById(R.id.fab);
+            ListView listenAnzeige = requireView().findViewById(R.id.list);
+            requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.GONE);
+
+            if (listenAnzeige.getChildCount() == 0) {
+                requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.VISIBLE);
+            }
+
+            neuenBenutzerAnlegen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO siehe Toast Text
+                    Toast.makeText(activity, "Benutzer erstellen (Benutzererstellungsdialog starten)", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initBenutzerListe(){

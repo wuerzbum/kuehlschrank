@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/benutzer"
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="75dp"
+        android:clipToPadding="false"
+        android:background="@color/primaryLightColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/color_fab"
+        android:layout_margin="16dp" />
+
+    <TextView
+        android:id="@+id/kein_element_vorhanden"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Benutzerverwaltung" />
+        android:text="@string/inventar_leer"
+        android:layout_alignParentTop="true"
+        android:textSize="16sp"
+        android:textColor="@color/primaryDarkColor"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:gravity="center" />
 
-    <Button
-        android:id="@+id/einstellungen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Einstellungen" />
-
-    <Button
-        android:id="@+id/einkaufsliste"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Einkaufsliste" />
-
-    <Button
-        android:id="@+id/barcode_datenbank"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Barcode Datenbank" />
-
-
-
-</LinearLayout>
+</RelativeLayout>

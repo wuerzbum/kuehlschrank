@@ -3,17 +3,12 @@ package manuel.de.kuehlschrankinventar.holder;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 import manuel.de.kuehlschrankinventar.datenbank.DefPref;
 
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.BARCODE_IST_BEREITS_VORHANDEN;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_BEREITS_VORHANDEN;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_LEER;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.OK;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings.HINTERLEGTE_PRODUKTE;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings.SPEICHER_VERSION_1;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.*;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings.*;
 
 public class Inventar {
 
@@ -50,10 +45,11 @@ public class Inventar {
 
     private void produkteInitialisieren() {
         try {
-            JSONArray loadedProdukte = new JSONArray(prefs.getString(HINTERLEGTE_PRODUKTE, null));
+            String savedString = prefs.getString(HINTERLEGTE_PRODUKTE, null);
+            if (savedString != null) {
+                JSONArray loadedProdukte = new JSONArray();
 
-            if (loadedProdukte.length() > 1) {
-                switch (loadedProdukte.getString(0)) {
+                switch (loadedProdukte.getInt(0)) {
                     case SPEICHER_VERSION_1:
                         produkteLadenVersion1(loadedProdukte);
                         break;
@@ -63,9 +59,7 @@ public class Inventar {
             } else {
                 //TODO keine Produkte gefunden
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -87,13 +81,13 @@ public class Inventar {
     }
 
     private void produkteSpeichern() {
-        ArrayList<String> tempList = new ArrayList<>();
-        tempList.add(SPEICHER_VERSION_1);
+        JSONArray tempList = new JSONArray();
+        tempList.put(SPEICHER_VERSION_1);
         for (Produkt produkt : produkte.values()) {
-            tempList.add(produkt.getSaveString());
+            tempList.put(produkt.getSaveString());
         }
 
-        prefs.setString(HINTERLEGTE_PRODUKTE, new JSONArray(tempList).toString());
+        prefs.setString(HINTERLEGTE_PRODUKTE, tempList.toString());
     }
 
     public int neuesProdukt(Produkt neuesProdukt) {
