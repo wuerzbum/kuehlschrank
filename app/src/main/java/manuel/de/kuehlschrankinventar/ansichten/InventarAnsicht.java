@@ -19,7 +19,7 @@ import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
 
-public class InventarAnsicht extends Fragment {
+public class InventarAnsicht extends MyFragmentAnsicht {
 
     private MainActivity activity;
     private ListView produktListenAnsicht;
@@ -41,7 +41,9 @@ public class InventarAnsicht extends Fragment {
 
         activity = ((MainActivity) getActivity());
 
-        activity.setTitle(activity.getString(R.string.inventar));
+        if (activity != null) {
+            activity.setTitle(activity.getString(R.string.inventar));
+        }
         initUI();
     }
 
@@ -52,64 +54,15 @@ public class InventarAnsicht extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            //TODO falls doch gewünscht, dass man fotografieren kann das folgende wieder "entkommentieren"
-            /*case R.id.takePicture:
-                startActivity(new Intent(MainActivity.this, PictureCodeActivity.class));
-                break;*/
-
-            case R.id.scanBarcode:
-                /*
-                Intent i = new Intent(activity, ScannedCodeActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);*/
-                activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_SCAN_ANSICHT);
-                break;
+        if (item.getItemId() == R.id.scanBarcode) {
+            activity.zeigeScanAnsicht();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void initUI() {
-        String abc = "abcdefghijklmnopqrstuvwxyz";
-        int i = 5;
-        try {
-            //TextView testTV = getView().findViewById(R.id.testTextView);
-            //testTV.setText("Es sind noch keine Lebensmittel vorhanden!");
-            Button ansicht_benutzer = getView().findViewById(R.id.benutzer);
-            Button ansicht_barcode_datenbank = getView().findViewById(R.id.barcode_datenbank);
-            Button ansicht_einkaufsliste = getView().findViewById(R.id.einkaufsliste);
-            Button ansicht_einstellungen = getView().findViewById(R.id.einstellungen);
-            ansicht_benutzer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_BENUTZER_ANSICHT);
-                }
-            });
-            ansicht_barcode_datenbank.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT);
-                    return true;
-                }
-            });
-            ansicht_einkaufsliste.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT);
-                }
-            });
-            ansicht_einstellungen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_EINSTELLUNGS_ANSICHT);
-                }
-            });
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            activity.failedInitUI();
-        }
+        //TODO initUI
     }
 
     private void initProduktListe(){
@@ -124,5 +77,9 @@ public class InventarAnsicht extends Fragment {
         //TODO: Methode Programmieren
     }
 
+    @Override
+    public void update() {
+        //TODO update Fragment
+    }
 }
 

@@ -10,5 +10,7 @@
 
     <color name="dark_grey">#FFAAAAAA</color>
 
+    <color name="tab_selected">#FF4D33</color>
+
     <color name="always_white">#FFFFFF</color>
 </resources>

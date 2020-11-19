@@ -11,131 +11,117 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings;
 import manuel.de.kuehlschrankinventar.R;
+import manuel.de.kuehlschrankinventar.adapter.FragmentPageAdapter;
 import manuel.de.kuehlschrankinventar.ansichten.BarcodeDatenbankAnsicht;
 import manuel.de.kuehlschrankinventar.ansichten.BenutzerAnsicht;
 import manuel.de.kuehlschrankinventar.ansichten.EinkaufslistenAnsicht;
 import manuel.de.kuehlschrankinventar.ansichten.Einstellungen;
 import manuel.de.kuehlschrankinventar.ansichten.InventarAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.MyFragmentAnsicht;
 import manuel.de.kuehlschrankinventar.ansichten.ScanAnsicht;
 import manuel.de.kuehlschrankinventar.datenbank.DefPref;
 import manuel.de.kuehlschrankinventar.holder.BenutzerManager;
 import manuel.de.kuehlschrankinventar.holder.Einkaufsliste;
 import manuel.de.kuehlschrankinventar.holder.Inventar;
 
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.*;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.ANFRAGE_KAMERA_BERECHTIGUNG;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.AUSGEWAEHLT_SCAN_ANSICHT;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private FragmentTransaction ft;
     private DefPref prefs;
     private Inventar inventar;
     private Einkaufsliste einkaufsliste;
     private BenutzerManager benutzerManager;
-    private int aktuelleAnsicht = AUSGEWAEHLT_INVENTAR_ANSICHT;
-    private int vorherigeAnsicht = DEFAULT;
 
-    private BarcodeDatenbankAnsicht barcodeDatenbank;
-    private BenutzerAnsicht benutzer;
-    private EinkaufslistenAnsicht einkaufslistenansicht;
     private Einstellungen einstellungen;
-    private InventarAnsicht inventarAnsicht;
-    private ScanAnsicht scanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        zeigeAnsicht(AUSGEWAEHLT_INVENTAR_ANSICHT);
+        initUI();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case ANFRAGE_KAMERA_BERECHTIGUNG:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        //if (aktuelleAnsicht == AUSGEWAEHLT_SCAN_ANSICHT) {
-                            MainActivity.this.zeigeScanAnsicht();
-                        //}
-                    }
-                } else {
-                    zeigeAnsicht(aktuelleAnsicht);
-                    Toast.makeText(this, "Für die ScanAnsicht wird die Kamera Berechtigung benötigt!", Toast.LENGTH_SHORT).show(); // TODO Text
+        if (requestCode == ANFRAGE_KAMERA_BERECHTIGUNG) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    MainActivity.this.zeigeScanAnsicht();
                 }
-                break;
+            } else {
+                Toast.makeText(this, "Für die ScanAnsicht wird die Kamera Berechtigung benötigt!", Toast.LENGTH_SHORT).show(); // TODO Text
+            }
         }
     }
 
-    public void zeigeAnsicht(int ansicht) {
-        if (ansicht == vorherigeAnsicht){
-            vorherigeAnsicht = DEFAULT;
-        }else {
-            vorherigeAnsicht = aktuelleAnsicht;
-        }
+    private void initUI() {
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        if (tabLayout != null) {
+            ArrayList<String> tabNamen = new ArrayList<>();
+            tabNamen.add(getString(R.string.ansicht_inventar));
+            tabNamen.add(getString(R.string.ansicht_barcode_datenbank));
+            tabNamen.add(getString(R.string.ansicht_benutzer));
+            tabNamen.add(getString(R.string.ansicht_einkaufsliste));
 
-        switch (ansicht) {
-            case AUSGEWAEHLT_SCAN_ANSICHT:
-                zeigeScanAnsicht();
-                break;
+            for (String tabName : tabNamen) {
+                tabLayout.addTab(tabLayout.newTab().setText(tabName));
+            }
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-            case AUSGEWAEHLT_BENUTZER_ANSICHT:
-                zeigeBenutzerAnsicht();
-                break;
+            final ViewPager viewPager = findViewById(R.id.placeholder);
+            viewPager.removeAllViews();
 
-            case AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT:
-                zeigeBarcodeDatenbankAnsicht();
-                break;
+            ArrayList<MyFragmentAnsicht> fragments = new ArrayList<>();
+            fragments.add(new InventarAnsicht());
+            fragments.add(new BarcodeDatenbankAnsicht());
+            fragments.add(new BenutzerAnsicht());
+            fragments.add(new EinkaufslistenAnsicht());
 
-            case AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT:
-                zeigeEinkaufslistenAnsicht();
-                break;
+            final FragmentPageAdapter fa = new FragmentPageAdapter(getSupportFragmentManager(), tabNamen, fragments);
 
-            case AUSGEWAEHLT_EINSTELLUNGS_ANSICHT:
-                zeigeEinstellungen();
-                break;
+            viewPager.setAdapter(fa);
+            viewPager.setOffscreenPageLimit(2);
 
-            default:
-                zeigeInventarAnsicht();
-        }
-    }
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-    private void zeigeInventarAnsicht() {
-        if (inventarAnsicht == null) {
-            inventarAnsicht = new InventarAnsicht();
-        }
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, inventarAnsicht);
-        aktuelleAnsicht = AUSGEWAEHLT_INVENTAR_ANSICHT;
-        ft.commit();
-    }
-
-    private void zeigeScanAnsicht() {
-        /*
-        if (scanner == null) {
-            scanner = new ScanAnsicht(new Interfaces.information() {
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
-                public void inform(int information) {
-                    //TODO Wenn informationen ankommen
-                    switch (information) {
-                        case StaticInts.KAMERA_FREIGABE:
-                            zeigeAnsicht(StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT);
-                            break;
-                    }
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                    fa.updateFragment(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
                 }
             });
-        }
 
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, scanner);
-        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_SCAN_ANSICHT;
-        ft.commit();*/
+            Objects.requireNonNull(tabLayout.getTabAt(0)).select();
+        }
+    }
+
+    public void zeigeScanAnsicht() {
         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, ANFRAGE_KAMERA_BERECHTIGUNG);
         } else {
@@ -144,53 +130,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void zeigeBenutzerAnsicht(){
-        if (benutzer == null) {
-            benutzer = new BenutzerAnsicht();
-        }
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, benutzer);
-        aktuelleAnsicht = AUSGEWAEHLT_BENUTZER_ANSICHT;
-        ft.commit();
-    }
-
-    private void zeigeBarcodeDatenbankAnsicht(){
-        if (barcodeDatenbank == null) {
-            barcodeDatenbank = new BarcodeDatenbankAnsicht();
-        }
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, barcodeDatenbank);
-        aktuelleAnsicht = AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT;
-        ft.commit();
-    }
-
-    private void zeigeEinkaufslistenAnsicht(){
-        if (einkaufslistenansicht == null) {
-            einkaufslistenansicht = new EinkaufslistenAnsicht();
-        }
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.placeholder, einkaufslistenansicht);
-        aktuelleAnsicht = AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT;
-        ft.commit();
-    }
-
     private void zeigeEinstellungen(){
         if (einstellungen == null) {
             einstellungen = new Einstellungen();
         }
-        ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, einstellungen);
-        aktuelleAnsicht = AUSGEWAEHLT_EINSTELLUNGS_ANSICHT;
         ft.commit();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (vorherigeAnsicht == DEFAULT){
-            super.onBackPressed();
-        }else {
-            zeigeAnsicht(vorherigeAnsicht);
-        }
     }
 
     public DefPref getPrefs() {
@@ -223,20 +169,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        switch (requestCode) {
-            case AUSGEWAEHLT_SCAN_ANSICHT:
-                //TODO data auswerten --> gescannter Code
-                if (resultCode == StaticInts.RESULT_OK) {
-                    try {
-                        if (data != null) {
-                            Toast.makeText(this, data.getStringExtra(StaticStrings.BARCODE), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                        //kein Barcode gefunden
+        if (requestCode == AUSGEWAEHLT_SCAN_ANSICHT) {//TODO data auswerten --> gescannter Code
+            if (resultCode == StaticInts.RESULT_OK) {
+                try {
+                    if (data != null) {
+                        Toast.makeText(this, data.getStringExtra(StaticStrings.BARCODE), Toast.LENGTH_SHORT).show();
                     }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    //kein Barcode gefunden
                 }
-                break;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);

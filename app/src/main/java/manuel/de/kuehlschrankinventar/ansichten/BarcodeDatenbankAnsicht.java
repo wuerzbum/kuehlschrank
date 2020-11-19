@@ -14,11 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
 
-public class BarcodeDatenbankAnsicht extends Fragment {
+public class BarcodeDatenbankAnsicht extends MyFragmentAnsicht {
 
     private MainActivity activity;
     private ListView barcodeDatenbankenAnsicht;
@@ -37,7 +39,9 @@ public class BarcodeDatenbankAnsicht extends Fragment {
 
         activity = ((MainActivity)  getActivity());
 
-        activity.setTitle(activity.getString(R.string.barcode_datenbank));
+        if (activity != null) {
+            activity.setTitle(activity.getString(R.string.barcode_datenbank));
+        }
         initUI();
     }
 
@@ -48,39 +52,15 @@ public class BarcodeDatenbankAnsicht extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            //TODO falls doch gewünscht, dass man fotografieren kann das folgende wieder "entkommentieren"
-            /*case R.id.takePicture:
-                startActivity(new Intent(MainActivity.this, PictureCodeActivity.class));
-                break;*/
-
-            case R.id.scanBarcode:
-                /*
-                Intent i = new Intent(activity, ScannedCodeActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);*/
-                activity.zeigeAnsicht(StaticInts.AUSGEWAEHLT_SCAN_ANSICHT);
-                break;
+        if (item.getItemId() == R.id.scanBarcode) {
+            activity.zeigeScanAnsicht();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void initUI() {
-        String abc = "abcdefghijklmnopqrstuvwxyz";
-        int i = 5;
-        try {
-            TextView testTV = getView().findViewById(R.id.testTextView);
-            testTV.setText("Es sind noch keine Lebensmittel vorhanden!");
-
-            if(i==6) {
-                String abcFromR = getString(R.string.app_name);
-                testTV.setText(abcFromR);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            activity.failedInitUI();
-        }
+        //TODO initUI
     }
 
     private void initBarcodeListe(){
@@ -93,5 +73,10 @@ public class BarcodeDatenbankAnsicht extends Fragment {
 
     private void listenerNeuerBarcode(){
         //TODO: Methode Programmieren
+    }
+
+    @Override
+    public void update() {
+        //TODO update Fragment
     }
 }
