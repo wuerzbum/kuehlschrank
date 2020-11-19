@@ -2,10 +2,12 @@ package manuel.de.kuehlschrankinventar.ansichten;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -25,6 +27,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
+import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
 import manuel.de.kuehlschrankinventar.dialog.DialogEinscannen;
@@ -32,47 +35,32 @@ import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
 
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.BARCODE_IST_BEREITS_VORHANDEN;
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.DEFAULT;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_BEREITS_VORHANDEN;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_LEER;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.OK;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.ANFRAGE_KAMERA_BERECHTIGUNG;
 
-public class ScanAnsicht extends Fragment {
+public class ScanAnsicht extends AppCompatActivity {
 
     private SurfaceView kameraAnsicht;
     private TextView gelesenerBarcodeAnzeigen;
-    private MainActivity activity;
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private String gelesenerBarcode = "";
     private DialogEinscannen produktDialog;
-    private Interfaces.information informationListener;
 
-    public ScanAnsicht(@NonNull Interfaces.information informationListener) {
-        this.informationListener = informationListener;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.ansicht_scan, container, false);
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        setContentView(R.layout.ansicht_scan);
     }
-
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scanned_code);
-
-        prefs = new DefPref(ScannedCodeActivity.this);
-        produktManager = new ProduktManager(prefs);
-        initViews();
-    }
-     */
 
     @Override
     public void onPause() {
-        cameraSource.release();
+        if (cameraSource != null) {
+            cameraSource.release();
+        }
         super.onPause();
     }
 
@@ -80,53 +68,29 @@ public class ScanAnsicht extends Fragment {
     public void onResume() {
         super.onResume();
 
-        activity = ((MainActivity) getActivity());
+        setTitle(getString(R.string.scan_barcode));
 
-        try {
-            assert activity != null;
-            activity.setTitle(activity.getString(R.string.scan_barcode));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
         initAnsichten();
         initDetectorUndQuelle();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case ANFRAGE_KAMERA_BERECHTIGUNG:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        try {
-                            cameraSource.start(kameraAnsicht.getHolder());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return;
-                    }
-                }
-                break;
-        }
-    }
-
     private void initAnsichten() {
         try {
-            gelesenerBarcodeAnzeigen = getView().findViewById(R.id.txtBarcodeValue);
-            kameraAnsicht = getView().findViewById(R.id.surfaceView);
+            gelesenerBarcodeAnzeigen = findViewById(R.id.txtBarcodeValue);
+            kameraAnsicht = findViewById(R.id.surfaceView);
         } catch (NullPointerException e) {
             e.printStackTrace();
-            activity.failedInitUI();
+            setResult(StaticInts.DEFAULT);
+            finish();
         }
     }
 
     private void initDetectorUndQuelle() {
-        barcodeDetector = new BarcodeDetector.Builder(activity)
+        barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
 
-        cameraSource = new CameraSource.Builder(activity, barcodeDetector)
+        cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setRequestedPreviewSize(1920, 1080)
                 .setAutoFocusEnabled(true)
                 .build();
@@ -135,11 +99,18 @@ public class ScanAnsicht extends Fragment {
             @Override
             public void surfaceCreated(@NonNull SurfaceHolder holder) {
                 try {
-                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        cameraSource.start(kameraAnsicht.getHolder());
-                    } else {
-                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, ANFRAGE_KAMERA_BERECHTIGUNG);
+                    if (ActivityCompat.checkSelfPermission(ScanAnsicht.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        setResult(DEFAULT);
+                        finish();
                     }
+                    cameraSource.start(kameraAnsicht.getHolder());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -161,7 +132,7 @@ public class ScanAnsicht extends Fragment {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                informationListener.inform(StaticInts.KAMERA_FREIGABE);
+                // TODO ? informationListener.inform(StaticInts.KAMERA_FREIGABE);
             }
 
             @Override
@@ -184,7 +155,12 @@ public class ScanAnsicht extends Fragment {
                                 *  Diese muss abgespeichert werden
                                 */
                                 gelesenerBarcodeAnzeigen.setText(gelesenerBarcode);
-                                String name = "";
+                                Intent result = new Intent();
+                                result.putExtra(StaticStrings.BARCODE, gelesenerBarcode);
+                                setResult(StaticInts.RESULT_OK, result);
+                                finish();
+                                //TODO Ok Button um Barcode zu übernehmen?
+                                /*String name = "";
                                 if (activity.getInventar().exisitiertProduktBarcode(gelesenerBarcode)) {
                                     name = activity.getInventar().getProduktMitBarcode(gelesenerBarcode).getName();
                                 }
@@ -234,14 +210,14 @@ public class ScanAnsicht extends Fragment {
                                         }
                                     });
 
-                                    produktDialog.show();*/
+                                    produktDialog.show();/
                                 } else {
                                     if (!produktDialog.getBarcode().equals(gelesenerBarcode)) {
                                         //TODO Name wieder löschen?
                                         produktDialog.setBarcode(gelesenerBarcode);
                                         Toast.makeText(activity, getString(R.string.new_barcode_setted), Toast.LENGTH_SHORT).show();
                                     }
-                                }
+                                }*/
                         }
                     });
                 }

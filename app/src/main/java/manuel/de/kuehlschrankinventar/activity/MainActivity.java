@@ -1,19 +1,32 @@
 package manuel.de.kuehlschrankinventar.activity;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
-import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
+import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings;
 import manuel.de.kuehlschrankinventar.R;
-import manuel.de.kuehlschrankinventar.ansichten.*;
+import manuel.de.kuehlschrankinventar.ansichten.BarcodeDatenbankAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.BenutzerAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.EinkaufslistenAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.Einstellungen;
+import manuel.de.kuehlschrankinventar.ansichten.InventarAnsicht;
+import manuel.de.kuehlschrankinventar.ansichten.ScanAnsicht;
 import manuel.de.kuehlschrankinventar.datenbank.DefPref;
 import manuel.de.kuehlschrankinventar.holder.BenutzerManager;
 import manuel.de.kuehlschrankinventar.holder.Einkaufsliste;
 import manuel.de.kuehlschrankinventar.holder.Inventar;
-import manuel.de.kuehlschrankinventar.ansichten.ScanAnsicht;
+
+import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.*;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Inventar inventar;
     private Einkaufsliste einkaufsliste;
     private BenutzerManager benutzerManager;
-    private int aktuelleAnsicht = StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT;
-    private int vorherigeAnsicht = StaticInts.DEFAULT;
+    private int aktuelleAnsicht = AUSGEWAEHLT_INVENTAR_ANSICHT;
+    private int vorherigeAnsicht = DEFAULT;
 
     private BarcodeDatenbankAnsicht barcodeDatenbank;
     private BenutzerAnsicht benutzer;
@@ -38,34 +51,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        zeigeAnsicht(StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT);
+        zeigeAnsicht(AUSGEWAEHLT_INVENTAR_ANSICHT);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case ANFRAGE_KAMERA_BERECHTIGUNG:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        //if (aktuelleAnsicht == AUSGEWAEHLT_SCAN_ANSICHT) {
+                            MainActivity.this.zeigeScanAnsicht();
+                        //}
+                    }
+                } else {
+                    zeigeAnsicht(aktuelleAnsicht);
+                    Toast.makeText(this, "Für die ScanAnsicht wird die Kamera Berechtigung benötigt!", Toast.LENGTH_SHORT).show(); // TODO Text
+                }
+                break;
+        }
     }
 
     public void zeigeAnsicht(int ansicht) {
         if (ansicht == vorherigeAnsicht){
-            vorherigeAnsicht = StaticInts.DEFAULT;
+            vorherigeAnsicht = DEFAULT;
         }else {
             vorherigeAnsicht = aktuelleAnsicht;
         }
 
         switch (ansicht) {
-            case StaticInts.AUSGEWAEHLT_SCAN_ANSICHT:
+            case AUSGEWAEHLT_SCAN_ANSICHT:
                 zeigeScanAnsicht();
                 break;
 
-            case StaticInts.AUSGEWAEHLT_BENUTZER_ANSICHT:
+            case AUSGEWAEHLT_BENUTZER_ANSICHT:
                 zeigeBenutzerAnsicht();
                 break;
 
-            case StaticInts.AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT:
+            case AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT:
                 zeigeBarcodeDatenbankAnsicht();
                 break;
 
-            case StaticInts.AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT:
+            case AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT:
                 zeigeEinkaufslistenAnsicht();
                 break;
 
-            case StaticInts.AUSGEWAEHLT_EINSTELLUNGS_ANSICHT:
+            case AUSGEWAEHLT_EINSTELLUNGS_ANSICHT:
                 zeigeEinstellungen();
                 break;
 
@@ -80,11 +112,12 @@ public class MainActivity extends AppCompatActivity {
         }
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, inventarAnsicht);
-        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_INVENTAR_ANSICHT;
+        aktuelleAnsicht = AUSGEWAEHLT_INVENTAR_ANSICHT;
         ft.commit();
     }
 
     private void zeigeScanAnsicht() {
+        /*
         if (scanner == null) {
             scanner = new ScanAnsicht(new Interfaces.information() {
                 @Override
@@ -102,7 +135,13 @@ public class MainActivity extends AppCompatActivity {
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, scanner);
         aktuelleAnsicht = StaticInts.AUSGEWAEHLT_SCAN_ANSICHT;
-        ft.commit();
+        ft.commit();*/
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, ANFRAGE_KAMERA_BERECHTIGUNG);
+        } else {
+            Intent startScanAnsicht = new Intent(MainActivity.this, ScanAnsicht.class);
+            startActivityForResult(startScanAnsicht, AUSGEWAEHLT_SCAN_ANSICHT);
+        }
     }
 
     private void zeigeBenutzerAnsicht(){
@@ -111,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, benutzer);
-        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_BENUTZER_ANSICHT;
+        aktuelleAnsicht = AUSGEWAEHLT_BENUTZER_ANSICHT;
         ft.commit();
     }
 
@@ -121,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, barcodeDatenbank);
-        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT;
+        aktuelleAnsicht = AUSGEWAEHLT_BARCODE_DATENBANK_ANSICHT;
         ft.commit();
     }
 
@@ -131,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, einkaufslistenansicht);
-        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT;
+        aktuelleAnsicht = AUSGEWAEHLT_EINKAUSLISTEN_ANSICHT;
         ft.commit();
     }
 
@@ -141,13 +180,13 @@ public class MainActivity extends AppCompatActivity {
         }
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, einstellungen);
-        aktuelleAnsicht = StaticInts.AUSGEWAEHLT_EINSTELLUNGS_ANSICHT;
+        aktuelleAnsicht = AUSGEWAEHLT_EINSTELLUNGS_ANSICHT;
         ft.commit();
     }
 
     @Override
     public void onBackPressed() {
-        if (vorherigeAnsicht == StaticInts.DEFAULT){
+        if (vorherigeAnsicht == DEFAULT){
             super.onBackPressed();
         }else {
             zeigeAnsicht(vorherigeAnsicht);
@@ -180,6 +219,27 @@ public class MainActivity extends AppCompatActivity {
             benutzerManager = new BenutzerManager(prefs);
         }
         return benutzerManager;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case AUSGEWAEHLT_SCAN_ANSICHT:
+                //TODO data auswerten --> gescannter Code
+                if (resultCode == StaticInts.RESULT_OK) {
+                    try {
+                        if (data != null) {
+                            Toast.makeText(this, data.getStringExtra(StaticStrings.BARCODE), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                        //kein Barcode gefunden
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void failedInitUI() {

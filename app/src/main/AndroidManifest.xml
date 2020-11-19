@@ -12,11 +12,14 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"
+                    android:configChanges="screenSize|orientation" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ansichten.ScanAnsicht"
+            android:configChanges="screenSize|orientation" />
     </application>
 
 </manifest>

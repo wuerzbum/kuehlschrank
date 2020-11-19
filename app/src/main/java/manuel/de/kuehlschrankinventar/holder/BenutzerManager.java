@@ -10,6 +10,7 @@ public class BenutzerManager {
     public BenutzerManager(DefPref cgPref){
         //TODO: Methode Benutzermanager in Klasse BenutzerManager ausarbeiten
     }
+
     private void benutzerInitialisieren(){
         //TODO: Methode benutzerInitialisieren in Klasse BenutzerMnager ausarbeiten
     }
