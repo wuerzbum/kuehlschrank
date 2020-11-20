@@ -27,6 +27,7 @@ public class Inventar {
         produkteInitialisieren();
     }
 
+
     public boolean exisitiertProduktBarcode(String barcode) { //CG: public (laut Ausarbeitung private)?
         return barcodes != null && barcodes.containsKey(barcode);
     }
