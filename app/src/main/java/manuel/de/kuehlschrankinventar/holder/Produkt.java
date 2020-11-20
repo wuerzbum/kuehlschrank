@@ -19,8 +19,18 @@ public class Produkt {
     private double menge;
     private Date verfallsdatum;
     private double preis;
+    /*
+        TreeMap aufbau:
+            key = String = Benutzername
+            value = double = menge, die der Benutzer besitzt
+     */
     private TreeMap<String, Double> besitzermenge;
-    private TreeMap<String, Double>minBestand; // TODO Treemap<Benutzer in TreeMap<Atring geändert
+    /*
+        TreeMap aufbau:
+            key = String = Benutzername
+            value = double = menge, die der Benutzer als mindestbestand definiert hat
+     */
+    private TreeMap<String, Double>minBestand;
     private String barcode;
     private String einheit;
 
@@ -37,17 +47,19 @@ public class Produkt {
      * @param einheit Einheit
      */
      public Produkt(String name, double menge, Date verfallsdatum, double preis, TreeMap <String, Double>besitzer, TreeMap <String, Double> minBestand, String barcode, String einheit) {
-        setName(name);
-        setMenge(menge);
-        setVerfallsdatum(verfallsdatum);
-        setPreis(preis);
-        setBesitzer(besitzer);
-        setMinBestand(minBestand);
-        setBarcode(barcode);
-        setEinheit(einheit);
+         //neues Produkt erstekkeb
+         setName(name);
+         setMenge(menge);
+         setVerfallsdatum(verfallsdatum);
+         setPreis(preis);
+         setBesitzer(besitzer);
+         setMinBestand(minBestand);
+         setBarcode(barcode);
+         setEinheit(einheit);
     }
 
     public Produkt(String jsonString) {
+         // Produkt anhand der Datenbank laden
         if (!jsonString.equals("")) {
             try {
                 mitJSONStringLaden(jsonString);
@@ -72,7 +84,7 @@ public class Produkt {
     }
 
     /**
-     * Menge ändern
+     * Gesamtmenge ändern
      * @param newMenge Menge
      * @return True bei erfolgreicher Übergabe
      */
@@ -94,7 +106,7 @@ public class Produkt {
         if (newVerfallsdatum == null) {
             return false;
         } else {
-            this.verfallsdatum = verfallsdatum;
+            this.verfallsdatum = newVerfallsdatum;
             return true;
         }
     }
@@ -206,28 +218,43 @@ public class Produkt {
         {
             return true;
         } else {return false;}
+    }
 
-    }
-/*    //TODO wird nicht benötigt Getter Besitzemenge macht das schon ?????
-    public double bestandVonBesitzer(String name){
-        return 0.0;
-    }
-*/
     public boolean neuerEinkauf(){
+        /*
+            benötigte Parameter:
+            menge, benutzername, preis
+            -> gesamtmenge anpassen
+            -> menge von Besitzer anpassen
+            -> minPreis, maxPreis, durchschnittsPreis anpassen
+
+            Methode vermutlich besser in Inventar geeignet mit weiterem Übergabeparameter "Produktname"
+            -> danach speichern
+         */
        setMenge(this.menge + 1.0);
         //TODO: Methode neuerEinauf in Klasse Produkt ausarbeiten
         return false;
     }
 
     public boolean verbrauchen(){
-      if (this.menge != 0){
-        setMenge(this.menge - 1.0);
-      return true;
-      }else {return false;}
+        /*
+            benötigte Parameter:
+            menge, benutzername
+            -> gesamtmenge anpassen
+            -> menge von Besitzer anpassen
+
+            Methode vermutlich besser in Inventar geeignet mit weiterem Übergabeparameter "Produktname"
+            -> danach speichern
+         */
+        if (this.menge != 0) {
+            setMenge(this.menge - 1.0);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void nutzerBenachrichtigen(){
-
         //TODO: Methode nutzerBenachrichtigen in Klasse Produkt ausarbeiten (Notification)
     }
 
@@ -259,6 +286,7 @@ public class Produkt {
     }
 
     public String getSaveString() {
+        // save String für Datenbank
         try {
             JSONObject saveObj = new JSONObject();
 
@@ -285,6 +313,7 @@ public class Produkt {
     }
 
     private void mitJSONStringLaden(String jsonString) throws JSONException {
+        // laden mit String aus Datenbank
         JSONObject object = new JSONObject(jsonString);
         setName(object.getString(PRODUKTNAME));
         setBarcode(object.getString(BARCODE));

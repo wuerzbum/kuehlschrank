@@ -13,13 +13,18 @@ import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings.
 public class Inventar {
 
     private DefPref prefs;
+    /*
+        Aufbau Treemap:
+            key = String = Barcode des Produktes
+            value = zum Barcode hinterlegtes Produkt
+     */
     private TreeMap<String, Produkt> barcodes;
+    /*
+        Aufbau Treemap:
+            key = String = Name des Produktes
+            value = zum Namen hinterlegtes Produkt
+     */
     private TreeMap<String, Produkt> produkte;
-
-    //<"Milch", Produkt>
-    //<"Hafer", Produkt>
-    //<"Käse", Produkt>
-    //<"Apfel", Produkt>
 
     public Inventar(DefPref prefs) {
         this.prefs = prefs;
@@ -27,24 +32,38 @@ public class Inventar {
         produkteInitialisieren();
     }
 
-
-    public boolean exisitiertProduktBarcode(String barcode) { //CG: public (laut Ausarbeitung private)?
+    public boolean exisitiertProduktBarcode(String barcode) {
+        /*
+            überprüfen, ob der Barcode bereits existiert
+         */
         return barcodes != null && barcodes.containsKey(barcode);
     }
 
     public Produkt getProduktMitBarcode(String barcode) {
+        /*
+            Produkt anhand des Barcodes zurückgeben
+            -> Treemap barcodes
+         */
         return barcodes.get(barcode);
     }
 
-    public boolean existiertProduktName(String produktname) { //CG: public (laut Ausarbeitung private)?
+    public boolean existiertProduktName(String produktname) {
+        /*
+            überprüfen, ob der Produktname bereits existiert
+         */
         return produkte != null && produkte.containsKey(produktname);
     }
 
     public Produkt getProduktMitName(String produktname) {
+        /*
+            Produkt anhand des Produktnamens zurück geben
+            -> Treemap produkte
+         */
         return produkte.get(produktname);
     }
 
     private void produkteInitialisieren() {
+        // Produkte aus der Datenbank laden
         try {
             String savedString = prefs.getString(HINTERLEGTE_PRODUKTE, null);
             if (savedString != null) {
@@ -65,7 +84,8 @@ public class Inventar {
         }
     }
 
-    private void produkteLadenVersion1(JSONArray arr) throws JSONException { //CG: TODO Methode kommt nicht in Ausarbitung 12.11. vor!
+    private void produkteLadenVersion1(JSONArray arr) throws JSONException {
+        // Ladeversion 1
         barcodes = new TreeMap<>();
         produkte = new TreeMap<>();
         for (int i = 1; i<arr.length(); i++) {
@@ -82,6 +102,7 @@ public class Inventar {
     }
 
     private void produkteSpeichern() {
+        //Produkte in Datenbank speichern
         JSONArray tempList = new JSONArray();
         tempList.put(SPEICHER_VERSION_1);
         for (Produkt produkt : produkte.values()) {
@@ -92,6 +113,11 @@ public class Inventar {
     }
 
     public int neuesProdukt(Produkt neuesProdukt) {
+        /*
+            neues Produkt der Treemap hinzufügen
+            Wenn kein barcode, dann nur der Map "produkte" ansonsten auch der Map "barcodes"
+            am ende speichern!
+         */
         int returnState = OK;
         if (produkte == null) {
             produkte = new TreeMap<>();
@@ -126,11 +152,25 @@ public class Inventar {
 
     private int produktBearbeiten(Produkt altesProdukt, Produkt neuesProdukt) {
         //TODO produkt bearbeiten
+        /*
+            Parameter: altesProdukt + neuesProdukt
+            anhand des alten Produkts die zwei Maps (barcodes und produkte) anpassen
+            wenn barcode gelöscht wurde, dann aus der treemap barcodes löschen
+            wenn name geändert, dann in Einkaufsliste anpassen
+
+            -> speichern!
+         */
         return 0; //CG: geändert von void-Funktion zu int laut Ausarbeitung 12.11.
     }
 
     private boolean produktEntfernen(Produkt produkt) {
         //TODO produkt entfernen
-        return false; //CG: geändert von void-Funktion zu boolean laut Ausarbeitung 12.11.
+        /*
+            Produkt aus beiden Treemaps löschen
+            Ebenso aus der Einkaufsliste löschen (für alle Benutzer)
+
+            -> speichern!
+         */
+        return false;
     }
 }
