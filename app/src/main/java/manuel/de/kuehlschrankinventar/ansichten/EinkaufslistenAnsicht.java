@@ -78,6 +78,7 @@ public class EinkaufslistenAnsicht extends MyFragmentAnsicht {
                 @Override
                 public void onClick(View v) {
                     //TODO siehe Toast Text
+                    weiteresProduktHinzufuegen();
                     Toast.makeText(activity, "Produkt zur Einkaufsliste hinzufügen (Auswahl aus vorhandenen Produkten mit ListViewDialog)", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -88,14 +89,25 @@ public class EinkaufslistenAnsicht extends MyFragmentAnsicht {
 
     private void initEinkaufsliste(){
         //TODO: Methode Programmieren
+        /*
+            Liste der Produkte erzeugen, die auf der Einkaufsliste stehen
+            Hierzu in einer neuen privaten Variable die Liste speichern
+            erhält man durch mainActivity -> getEinkaufsliste -> getListe (letzte Funktion schon definiert?)
+         */
     }
 
     private void weiteresProduktHinzufuegen(){
         //TODO: Methode Programmieren
+        /*
+
+         */
     }
 
     @Override
     public void update() {
         //TODO update Fragment
+        /*
+
+         */
     }
 }

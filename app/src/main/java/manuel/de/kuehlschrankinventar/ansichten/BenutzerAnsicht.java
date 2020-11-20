@@ -75,6 +75,7 @@ public class BenutzerAnsicht extends MyFragmentAnsicht {
                 @Override
                 public void onClick(View v) {
                     //TODO siehe Toast Text
+                    neuenBenutzerHinzufuegen();
                     Toast.makeText(activity, "Benutzer erstellen (Benutzererstellungsdialog starten)", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -85,18 +86,31 @@ public class BenutzerAnsicht extends MyFragmentAnsicht {
 
     private void initBenutzerListe(){
         //TODO: Methode Programmieren
+        /*
+            Die Liste der Benutzer initialisieren und in einer privaten variablen abspeichern.
+            Erhältlich durch mainActivity -> BenutzerManager -> getBenutzerListe (letzte Funktion fehlt noch)
+         */
     }
 
     private void neuenBenutzerHinzufuegen(){
         //TODO: Methode Programmieren
+        /*
+            Dialog starten, in dem ein neuer Benutzer hinzugefügt werden kann
+         */
     }
 
     private void listenerBenutzer(){
         //TODO: Methode Programmieren
+        /*
+            Wenn neuer Benutzer hinzugefügt wurde, dann das Layout aktualisieren -> evtl. ersetzbar durch update() Funktion
+         */
     }
 
     @Override
     public void update() {
         //TODO update Fragment
+        /*
+            Alle Listen aktualisieren
+         */
     }
 }
