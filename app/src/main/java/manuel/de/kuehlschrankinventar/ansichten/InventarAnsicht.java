@@ -1,5 +1,7 @@
 package manuel.de.kuehlschrankinventar.ansichten;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -7,18 +9,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
 
@@ -26,9 +26,9 @@ public class InventarAnsicht extends MyFragmentAnsicht {
 
     private MainActivity activity;
     private ListView produktListenAnsicht;
-
-
-
+    private SearchView searchView;
+    //TODO adapter anpassen
+    private ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
@@ -52,14 +52,41 @@ public class InventarAnsicht extends MyFragmentAnsicht {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_inventar, menu);
+
+        MenuItem filterItem = menu.findItem(R.id.filter);
+        SearchManager searchManager = (SearchManager) this.getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView = null;
+        if (filterItem != null) {
+            searchView = (SearchView) filterItem.getActionView();
+            if (searchView != null) {
+                if (searchManager != null) {
+                    searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+                }
+                searchView.setSubmitButtonEnabled(false);
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        try {
+                            adapter.getFilter().filter(s);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                });
+            }
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.scanBarcode) {
-            activity.zeigeScanAnsicht();
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

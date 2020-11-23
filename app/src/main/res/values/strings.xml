@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Kuehlschrank Inventar</string>
+    <string name="alle_markierten_loeschen">Lösche alle Markierte</string>
     <string name="ansicht_barcode_datenbank">Barcode-\ndatenbank</string>
     <string name="ansicht_benutzer">Benutzer</string>
     <string name="ansicht_einkaufsliste">Einkaufs-\nliste</string>
@@ -22,6 +23,8 @@
     <string name="einkaufsliste_leer">Es wurde noch kein Produkt der Einkaufsliste Hinzugefügt!</string>
     <string name="einstellungen">Einstellungen</string>
     <string name="erstellen">Erstellen</string>
+
+    <string name="filter">Filter</string>
 
     <string name="inventar">Inventarliste</string>
     <string name="inventar_leer">Es ist noch kein Produkt in Ihrem Besitz!</string>
@@ -46,6 +49,7 @@
 
     <string name="save">Speichern</string>
     <string name="scan_barcode">Barcode scannen</string>
+    <string name="sortieren">Sortieren</string>
     <string name="space">\u0020</string>
 
     <string name="yes">Ja</string>

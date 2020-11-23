@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/filter"
+        android:title="@string/filter"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item
+        android:id="@+id/sortieren"
+        android:title="@string/sortieren"
+        android:orderInCategory="50" />
+
+    <!-- TODO Text -->
+    <item
+        android:id="@+id/zeige_nur_produkte_mit_Menge_0"
+        android:title="Zeige Menge = 0"
+        android:orderInCategory="80" />
+
+    <item
+        android:id="@+id/zeige_alle_produkte_mit_menge_groesser_0"
+        android:title="Zeige Menge ungleich 0"
+        android:orderInCategory="70" />
+</menu>
