@@ -3,6 +3,7 @@ package manuel.de.kuehlschrankinventar.holder;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import manuel.de.kuehlschrankinventar.datenbank.DefPref;
@@ -67,7 +68,7 @@ public class Inventar {
         try {
             String savedString = prefs.getString(HINTERLEGTE_PRODUKTE, null);
             if (savedString != null) {
-                JSONArray loadedProdukte = new JSONArray();
+                JSONArray loadedProdukte = new JSONArray(savedString);
 
                 switch (loadedProdukte.getInt(0)) {
                     case SPEICHER_VERSION_1:
@@ -87,7 +88,7 @@ public class Inventar {
     private void produkteLadenVersion1(JSONArray arr) throws JSONException {
         // Ladeversion 1
         barcodes = new TreeMap<>();
-        produkte = new TreeMap<>();
+        produkte = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 1; i<arr.length(); i++) {
             Produkt tempProdukt = new Produkt(arr.getString(i));
             produkte.put(tempProdukt.getName(), tempProdukt);
@@ -112,30 +113,40 @@ public class Inventar {
         prefs.setString(HINTERLEGTE_PRODUKTE, tempList.toString());
     }
 
+    public int checkProduktExisitiert(Produkt produkt) {
+        int returnState = OK;
+        if (produkt.getName().equals("")) {
+            returnState |= NAME_IST_LEER;
+        }
+        if (existiertProduktName(produkt.getName())) {
+            returnState |= NAME_IST_BEREITS_VORHANDEN;
+        }
+        if (produkt.hatBarcode()) {
+            if (exisitiertProduktBarcode(produkt.getBarcode())) {
+                returnState |= BARCODE_IST_BEREITS_VORHANDEN;
+            }
+        }
+        if (returnState != OK) {
+            return returnState;
+        }
+
+        return returnState;
+    }
+
     public int neuesProdukt(Produkt neuesProdukt) {
         /*
             neues Produkt der Treemap hinzufügen
             Wenn kein barcode, dann nur der Map "produkte" ansonsten auch der Map "barcodes"
             am ende speichern!
          */
-        int returnState = OK;
         if (produkte == null) {
-            produkte = new TreeMap<>();
+            produkte = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         }
-        if (neuesProdukt.getName().equals("")) {
-            returnState |= NAME_IST_LEER;
+        if (barcodes == null) {
+            barcodes = new TreeMap<>();
         }
-        if (existiertProduktName(neuesProdukt.getName())) {
-            returnState |= NAME_IST_BEREITS_VORHANDEN;
-        }
-        if (neuesProdukt.hatBarcode()) {
-            if (barcodes == null) {
-                barcodes = new TreeMap<>();
-            }
-            if (exisitiertProduktBarcode(neuesProdukt.getBarcode())) {
-                returnState |= BARCODE_IST_BEREITS_VORHANDEN;
-            }
-        }
+
+        int returnState = checkProduktExisitiert(neuesProdukt);
         if (returnState != OK) {
             return returnState;
         }
@@ -172,5 +183,13 @@ public class Inventar {
             -> speichern!
          */
         return false;
+    }
+
+    public ArrayList<Produkt> getProduktArrayList() {
+        ArrayList<Produkt> produktListe = new ArrayList<>();
+        if (produkte != null) {
+            produktListe.addAll(produkte.values());
+        }
+        return produktListe;
     }
 }

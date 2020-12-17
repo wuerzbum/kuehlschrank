@@ -1,23 +1,16 @@
 package manuel.de.kuehlschrankinventar.ansichten;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -29,17 +22,8 @@ import java.io.IOException;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings;
 import manuel.de.kuehlschrankinventar.R;
-import manuel.de.kuehlschrankinventar.activity.MainActivity;
-import manuel.de.kuehlschrankinventar.dialog.DialogEinscannen;
-import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
-import manuel.de.kuehlschrankinventar.holder.Produkt;
 
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.BARCODE_IST_BEREITS_VORHANDEN;
 import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.DEFAULT;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_BEREITS_VORHANDEN;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.NAME_IST_LEER;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.OK;
-import static manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts.ANFRAGE_KAMERA_BERECHTIGUNG;
 
 public class ScanAnsicht extends AppCompatActivity {
 

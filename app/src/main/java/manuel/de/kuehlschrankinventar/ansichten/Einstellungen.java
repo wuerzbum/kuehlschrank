@@ -52,7 +52,7 @@ public class Einstellungen extends Fragment {
                 Intent i = new Intent(activity, ScannedCodeActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);*/
-            activity.zeigeScanAnsicht();
+            //TODO activity.zeigeScanAnsicht();
         }
 
         return super.onOptionsItemSelected(item);

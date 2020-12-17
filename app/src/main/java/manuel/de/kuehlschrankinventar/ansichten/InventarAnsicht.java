@@ -1,5 +1,6 @@
 package manuel.de.kuehlschrankinventar.ansichten;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -19,8 +20,14 @@ import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
+import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
+import manuel.de.kuehlschrankinventar.adapter.ArrayAdapterInventarAnsicht;
+import manuel.de.kuehlschrankinventar.dialog.DialogBenutzer;
+import manuel.de.kuehlschrankinventar.dialog.DialogProdukt;
+import manuel.de.kuehlschrankinventar.holder.Produkt;
 
 public class InventarAnsicht extends MyFragmentAnsicht {
 
@@ -28,7 +35,7 @@ public class InventarAnsicht extends MyFragmentAnsicht {
     private ListView produktListenAnsicht;
     private SearchView searchView;
     //TODO adapter anpassen
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapterInventarAnsicht adapter;
 
     @Nullable
     @Override
@@ -48,6 +55,7 @@ public class InventarAnsicht extends MyFragmentAnsicht {
             activity.setTitle(activity.getString(R.string.inventar));
         }
         initUI();
+        initButtons();
     }
 
     @Override
@@ -94,19 +102,27 @@ public class InventarAnsicht extends MyFragmentAnsicht {
     private void initUI() {
         //TODO initUI
         try {
-            FloatingActionButton produktErstellen = requireView().findViewById(R.id.fab);
             ListView listenAnzeige = requireView().findViewById(R.id.list);
             requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.GONE);
 
-            if (listenAnzeige.getChildCount() == 0) {
+            initProduktListe();
+
+            if (listenAnzeige.getAdapter().getCount() == 0) {
                 requireView().findViewById(R.id.kein_element_vorhanden).setVisibility(View.VISIBLE);
             }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initButtons() {
+        try {
+            FloatingActionButton produktErstellen = requireView().findViewById(R.id.fab);
 
             produktErstellen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO siehe Toast Text
-                    Toast.makeText(activity, "Produkt erstellen (Produkterstellungsdialog starten)", Toast.LENGTH_SHORT).show();
+                    ListenerNeuesProdukt();
                 }
             });
         } catch (NullPointerException e) {
@@ -116,14 +132,51 @@ public class InventarAnsicht extends MyFragmentAnsicht {
 
     private void initProduktListe(){
         //TODO: Methode Programmieren
+        ListView listenAnzeige = requireView().findViewById(R.id.list);
+        adapter = new ArrayAdapterInventarAnsicht(activity, activity.getInventar().getProduktArrayList());
+
+        listenAnzeige.setAdapter(adapter);
+
+        listenAnzeige.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //TODO on Long click listener
+                return false;
+            }
+        });
     }
 
-    private void neuesProduktHinzufuegen(){
-        //TODO: Methode Programmieren
+    private void neuesProduktHinzufuegen(Produkt produkt){
+        if (activity.getInventar().neuesProdukt(produkt) != StaticInts.OK) {
+            //TODO Text anpassen
+            Toast.makeText(activity, "Konnte nicht gespeichert werden!", Toast.LENGTH_SHORT).show();
+        } else {
+            initUI();
+        }
     }
 
     private void ListenerNeuesProdukt(){
-        //TODO: Methode Programmieren
+        final AlertDialog dialog = new DialogProdukt(activity, null, activity.getInventar(), new Interfaces.produktDialogListener() {
+            @Override
+            public void produktSpeichern(Produkt neuesProdukt, Produkt altesProdukt) {
+                if (altesProdukt == null) {
+                    if (neuesProdukt != null) {
+                        neuesProduktHinzufuegen(neuesProdukt);
+                    }
+                }
+            }
+
+            @Override
+            public void getBarcodeScan(final Interfaces.getStringListener listener) {
+                activity.zeigeScanAnsicht(new Interfaces.getStringListener() {
+                    @Override
+                    public void getString(String string) {
+                        listener.getString(string);
+                    }
+                });
+            }
+        });
+        dialog.show();
     }
 
     @Override

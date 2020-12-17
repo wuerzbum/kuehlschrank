@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/primaryLightColor">
+
+    <TextView
+        android:id="@+id/title"
+        android:text="@string/verfallsdatum"
+        android:gravity="start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/primaryDarkColor" />
+
+    <TextView
+        android:id="@+id/message"
+        android:text="@string/verfallsdatum_auswaehlen"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="10dp">
+
+        <DatePicker
+            android:id="@+id/date_picker"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:calendarViewShown="false"
+            android:textColor="@color/primaryDarkColor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <Button
+                android:id="@+id/cancel"
+                android:text="@string/abbrechen"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryDarkColor"
+                style="@style/Widget.MyButton"/>
+
+            <Button
+                android:id="@+id/delete"
+                android:text="@string/loeschen"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryDarkColor"
+                style="@style/Widget.MyButton"/>
+
+            <Button
+                android:id="@+id/save"
+                android:text="@string/save"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primaryDarkColor"
+                style="@style/Widget.MyButton"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

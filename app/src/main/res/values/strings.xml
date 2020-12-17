@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Kuehlschrank Inventar</string>
+
+    <string name="abbrechen">Abbrechen</string>
     <string name="alle_markierten_loeschen">Lösche alle Markierte</string>
     <string name="ansicht_barcode_datenbank">Barcode-\ndatenbank</string>
     <string name="ansicht_benutzer">Benutzer</string>
@@ -19,6 +21,12 @@
 
     <string name="doublepoint">:</string>
 
+    <string name="einheit">Einheit</string>
+    <string-array name="einheit_array">
+        <item>Liter</item>
+        <item>kg</item>
+        <item>Stück</item>
+    </string-array>
     <string name="einkaufsliste">Einkaufsliste</string>
     <string name="einkaufsliste_leer">Es wurde noch kein Produkt der Einkaufsliste Hinzugefügt!</string>
     <string name="einstellungen">Einstellungen</string>
@@ -29,8 +37,13 @@
     <string name="inventar">Inventarliste</string>
     <string name="inventar_leer">Es ist noch kein Produkt in Ihrem Besitz!</string>
 
-    <string name="listingpoint">•</string>
+    <string name="klick_um_verfallsdatum_zu_waehlen">Klicken um Verfallsdatum auszuwählen</string>
+    <string name="klick_zum_scanner_starten">Klicken um Scanner zu starten</string>
 
+    <string name="listingpoint">•</string>
+    <string name="loeschen">Löschen</string>
+
+    <string name="menge">Menge</string>
     <string name="menu_scan_barcode">Barcode scannen</string>
     <string name="menu_take_picture">Bild aufnehmen</string>
 
@@ -42,8 +55,12 @@
     <string name="open_camera">Kamera öffnen</string>
 
     <string name="permission_denied">Berechtigung abgelehnt</string>
+    <string name="preis">Preis</string>
+    <string name="preis_pro_einheit_eingeben">Preis pro Einheit eingeben</string>
     <string name="prevent_memory_leaks">Zur Vermeidung von Speicherlecks wurde der Barcode-Scanner gestoppt</string>
     <string name="produkt">Produkt</string>
+    <string name="produktname">Produktname</string>
+    <string name="produktname_eingeben">Produktname eingeben</string>
 
     <string name="results">Ergebnisse</string>
 
@@ -51,6 +68,10 @@
     <string name="scan_barcode">Barcode scannen</string>
     <string name="sortieren">Sortieren</string>
     <string name="space">\u0020</string>
+
+    <string name="verfallsdatum">Verfallsdatum</string>
+    <string name="verfallsdatum_auswaehlen">Wählen Sie das Verfallsdatum aus.</string>
+    <string name="vorratsmenge_eingeben">Vorratsmenge eingeben</string>
 
     <string name="yes">Ja</string>
 </resources>

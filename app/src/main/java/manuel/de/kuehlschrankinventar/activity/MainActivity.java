@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticStrings;
 import manuel.de.kuehlschrankinventar.R;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Einstellungen einstellungen;
 
+    private Interfaces.getStringListener getStringListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.scanBarcode) {
-            zeigeScanAnsicht();
+            //TODO
+            zeigeScanAnsicht(getStringListener);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ANFRAGE_KAMERA_BERECHTIGUNG) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    MainActivity.this.zeigeScanAnsicht();
+                    MainActivity.this.zeigeScanAnsicht(getStringListener);
                 }
             } else {
                 Toast.makeText(this, "Für die ScanAnsicht wird die Kamera Berechtigung benötigt!", Toast.LENGTH_SHORT).show(); // TODO Text
@@ -137,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void zeigeScanAnsicht() {
+    public void zeigeScanAnsicht(Interfaces.getStringListener listener) {
+        this.getStringListener = listener;
         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, ANFRAGE_KAMERA_BERECHTIGUNG);
         } else {
@@ -189,13 +194,20 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == StaticInts.RESULT_OK) {
                 try {
                     if (data != null) {
+                        if (getStringListener != null) {
+                            getStringListener.getString(data.getStringExtra(StaticStrings.BARCODE));
+                        }
                         Toast.makeText(this, data.getStringExtra(StaticStrings.BARCODE), Toast.LENGTH_SHORT).show();
+                        return;
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                     //kein Barcode gefunden
                 }
             }
+
+            getStringListener.getString(null);
+            return;
         }
 
         super.onActivityResult(requestCode, resultCode, data);

@@ -126,7 +126,7 @@ public class Produkt {
         {
             return false;
         }else{
-            this.menge = newPreis;
+            this.preis = newPreis;
             return true;}
     }
 
@@ -153,6 +153,7 @@ public class Produkt {
      */
     public boolean setBarcode(String newBarcode) {
         if (newBarcode == null){
+            this.barcode = "";
             return  false;
         }else{
             this.barcode = newBarcode;

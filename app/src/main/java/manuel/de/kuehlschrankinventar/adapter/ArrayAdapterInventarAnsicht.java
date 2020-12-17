@@ -7,20 +7,25 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
 
 public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements Filterable {
     private Activity activity;
-    private ArrayList<Produkt> originalProdukte, gefilterteProdukte;
+    private final ArrayList<Produkt> originalProdukte;
+    private ArrayList<Produkt> gefilterteProdukte;
+    private SimpleDateFormat sDF = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
     public ArrayAdapterInventarAnsicht(@NonNull Activity activity, ArrayList<Produkt> produkte) {
         super(activity, R.layout.listview_row_produkt);
@@ -43,42 +48,37 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
         }
 
         Produkt tempProdukt = gefilterteProdukte.get(position);
-        holder.getArrow().setBackground(ResourcesCompat.getDrawable(activity.getResources(),
-                android.R.drawable.arrow_down_float, null));
+
+        //Produktname
         holder.getProduktName().setText(tempProdukt.getName());
-        //TODO allle Texte setzen
+
+        //Menge und Einheit
+        holder.getMenge().setText(String.valueOf(tempProdukt.getMenge()));
+        holder.getEinheit().setText(tempProdukt.getEinheit());
+
         //Verfallsdatum
-        holder.getVerfallsdatum().setText("TestVerfallsdatum");
-        holder.getVerfallsdatum().setVisibility(View.VISIBLE);
+        if (tempProdukt.getVerfallsdatum() != null) {
+            holder.getVerfallsdatum().setText(sDF.format(tempProdukt.getVerfallsdatum()));
+        } else {
+            holder.getVerfallsdatum().setText("-");
+        }
+
         //Barcode
-        holder.getBarcode().setText("TestBarcode");
-        holder.getBarcode().setVisibility(View.VISIBLE);
+        if (!tempProdukt.getBarcode().equals("")) {
+            holder.getBarcode().setText(tempProdukt.getBarcode());
+        } else {
+            holder.getBarcode().setText("-");
+        }
+
         //preisdurchschnitt
-        holder.getPreisDurchschnitt().setText("Test Durchschnittspreis");
-        holder.getPreisDurchschnitt().setVisibility(View.VISIBLE);
-        //preisMin
-        holder.getPreisMin().setText("Test Mindest Preis");
-        holder.getPreisMin().setVisibility(View.VISIBLE);
-        //preisMax
-        holder.getPreisMax().setText("Test Maximal Preis");
-        holder.getPreisMax().setVisibility(View.VISIBLE);
-        holder.getPreis().setVisibility(View.GONE);
+        holder.getPreisDurchschnitt().setText(String.valueOf(tempProdukt.getPreis()));
+
+        holder.klappen(activity);
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Ein- und Ausklappen des Produktes
-                if (holder.istErweitert()) {
-                    //einklappen
-                    holder.getArrow().setBackground(ResourcesCompat.getDrawable(activity.getResources(),
-                            android.R.drawable.arrow_down_float, null));
-                    holder.getPreis().setVisibility(View.GONE);
-                } else {
-                    //ausklappen
-                    holder.getArrow().setBackground(ResourcesCompat.getDrawable(activity.getResources(),
-                            android.R.drawable.arrow_up_float, null));
-                    holder.getPreis().setVisibility(View.VISIBLE);
-                }
+                holder.onClick(activity);
             }
         });
 
@@ -87,9 +87,9 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
 
     private static class ViewHolder {
         private final View row;
-        private View preis = null;
         private TextView arrow = null, produktName = null, verfallsdatum = null, barcode = null
-                , preisDurchschnitt = null, preisMax = null, preisMin = null;
+                , preisDurchschnitt = null, menge = null, einheit = null;
+        private TableRow verfallsdatumRow, preisRow, barcodeRow;
         private boolean istErweitert = false;
 
         public ViewHolder(View row) {
@@ -110,11 +110,35 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
             return produktName;
         }
 
+        public TextView getMenge() {
+            if (menge == null) {
+                menge = row.findViewById(R.id.menge);
+            }
+
+            return menge;
+        }
+
+        public TextView getEinheit() {
+            if (einheit == null) {
+                einheit = row.findViewById(R.id.einheit);
+            }
+
+            return einheit;
+        }
+
         public TextView getVerfallsdatum() {
             if (verfallsdatum == null) {
                 verfallsdatum = row.findViewById(R.id.verfallsdatum);
             }
             return verfallsdatum;
+        }
+
+        public TableRow getVerfallsdatumRow() {
+            if (verfallsdatumRow == null) {
+                verfallsdatumRow = row.findViewById(R.id.verfallsdatum_row);
+            }
+
+            return verfallsdatumRow;
         }
 
         public TextView getBarcode() {
@@ -124,6 +148,14 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
             return barcode;
         }
 
+        public TableRow getBarcodeRow() {
+            if (barcodeRow == null) {
+                barcodeRow = row.findViewById(R.id.barcode_row);
+            }
+
+            return barcodeRow;
+        }
+
         public TextView getPreisDurchschnitt() {
             if (preisDurchschnitt == null) {
                 preisDurchschnitt = row.findViewById(R.id.preis_durchschnitt);
@@ -131,29 +163,48 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
             return preisDurchschnitt;
         }
 
-        public TextView getPreisMax() {
-            if (preisMax == null) {
-                preisMax = row.findViewById(R.id.preis_max);
+        public TableRow getPreisRow() {
+            if (preisRow == null) {
+                preisRow = row.findViewById(R.id.preis_row);
             }
-            return preisMax;
+
+            return preisRow;
         }
 
-        public TextView getPreisMin() {
-            if (preisMin == null) {
-                preisMin = row.findViewById(R.id.preis_min);
+        public void onClick(Activity activity) {
+            if (istErweitert) {
+                //einklappen
+                einklappen(activity);
+            } else {
+                //ausklappen
+                ausklappen(activity);
             }
-            return preisMin;
         }
 
-        public View getPreis() {
-            if (preis == null) {
-                preis = row.findViewById(R.id.preis_layout);
+        public void klappen(Activity activity) {
+            if (istErweitert) {
+                ausklappen(activity);
+            } else {
+                einklappen(activity);
             }
-            return preis;
         }
 
-        public boolean istErweitert() {
-            return istErweitert;
+        private void einklappen(Activity activity) {
+            getArrow().setBackground(ResourcesCompat.getDrawable(activity.getResources(),
+                    android.R.drawable.arrow_down_float, null));
+            getVerfallsdatumRow().setVisibility(View.GONE);
+            getPreisRow().setVisibility(View.GONE);
+            getBarcodeRow().setVisibility(View.GONE);
+            istErweitert = false;
+        }
+
+        private void ausklappen(Activity activity) {
+            getArrow().setBackground(ResourcesCompat.getDrawable(activity.getResources(),
+                    android.R.drawable.arrow_up_float, null));
+            getPreisRow().setVisibility(View.VISIBLE);
+            getVerfallsdatumRow().setVisibility(View.VISIBLE);
+            getBarcodeRow().setVisibility(View.VISIBLE);
+            istErweitert = true;
         }
     }
 

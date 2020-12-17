@@ -20,12 +20,67 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
-        <LinearLayout
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <!-- TODO EditTexte für Produkterstellung einfügen -->
-        </LinearLayout>
+            android:stretchColumns="1">
+            <TableRow>
+                <TextView
+                    android:text="@string/produktname"
+                    android:layout_gravity="center_vertical" />
+                <EditText
+                    android:id="@+id/produktName"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="@string/menge"
+                    android:layout_gravity="center_vertical" />
+                <EditText
+                    android:id="@+id/produktMenge"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="@string/verfallsdatum"
+                    android:layout_gravity="center_vertical" />
+                <EditText
+                    android:id="@+id/verfallsdatum"
+                    android:inputType="none"
+                    android:maxLines="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="@string/preis"
+                    android:layout_gravity="center_vertical" />
+                <EditText
+                    android:id="@+id/preis_pro_einheit"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="@string/barcode"
+                    android:layout_gravity="center_vertical" />
+                <EditText
+                    android:id="@+id/barcode"
+                    android:inputType="none"
+                    android:clickable="false"
+                    android:maxLines="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="@string/einheit"
+                    android:layout_gravity="center_vertical" />
+                <Spinner
+                    android:id="@+id/einheit"
+                    android:background="@drawable/button_with_border"
+                    android:layout_width="wrap_content"
+                    android:spinnerMode="dropdown" />
+            </TableRow>
+        </TableLayout>
     </ScrollView>
 
     <LinearLayout

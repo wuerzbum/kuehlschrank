@@ -87,7 +87,7 @@ public class BarcodeDatenbankAnsicht extends MyFragmentAnsicht {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.scanBarcode) {
-            activity.zeigeScanAnsicht();
+            //TODO activity.zeigeScanAnsicht();
         }
 
         return super.onOptionsItemSelected(item);
