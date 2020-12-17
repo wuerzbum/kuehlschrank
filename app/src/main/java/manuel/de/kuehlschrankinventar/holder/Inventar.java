@@ -161,28 +161,58 @@ public class Inventar {
         return returnState;
     }
 
-    private int produktBearbeiten(Produkt altesProdukt, Produkt neuesProdukt) {
-        //TODO produkt bearbeiten
-        /*
-            Parameter: altesProdukt + neuesProdukt
-            anhand des alten Produkts die zwei Maps (barcodes und produkte) anpassen
-            wenn barcode gelöscht wurde, dann aus der treemap barcodes löschen
-            wenn name geändert, dann in Einkaufsliste anpassen
+    public int produktBearbeiten(Produkt altesProdukt, Produkt neuesProdukt) {
+        //TODO produkt in der Einkaufsliste überarbeiten
+        int result = OK;
 
-            -> speichern!
-         */
-        return 0; //CG: geändert von void-Funktion zu int laut Ausarbeitung 12.11.
+        if (produkte != null) {
+            if (!produkte.containsKey(altesProdukt.getName())) {
+                result |= NAME_IST_NICHT_VORHANDEN;
+            }
+        } else {
+            result |= KEINE_PRODUKTE_VORHANDEN;
+        }
+
+        if (altesProdukt.getBarcode() != null && ! altesProdukt.getBarcode().equals("")) {
+            if (!barcodes.containsKey(altesProdukt.getBarcode())) {
+                result |= BARCODE_NICHT_GEFUNDEN;
+            } else if (result == OK){
+                if (neuesProdukt.getBarcode() != null && !neuesProdukt.getBarcode().equals("")) {
+                    barcodes.put(neuesProdukt.getBarcode(), neuesProdukt);
+                }
+            }
+        }else if (result == OK) {
+            barcodes.remove(altesProdukt.getBarcode());
+            if (neuesProdukt.getBarcode() != null && !neuesProdukt.getBarcode().equals("")) {
+                barcodes.put(neuesProdukt.getBarcode(), neuesProdukt);
+            }
+        }
+
+        if (result == OK) {
+            produkte.remove(altesProdukt.getName());
+            produkte.put(neuesProdukt.getName(), neuesProdukt);
+
+            produkteSpeichern();
+        }
+        return result;
     }
 
-    private boolean produktEntfernen(Produkt produkt) {
-        //TODO produkt entfernen
-        /*
-            Produkt aus beiden Treemaps löschen
-            Ebenso aus der Einkaufsliste löschen (für alle Benutzer)
+    public boolean produktEntfernen(Produkt produkt) {
+        //TODO produkt aus Einkaufsliste entfernen
 
-            -> speichern!
-         */
-        return false;
+        if (produkte.containsKey(produkt.getName())) {
+            produkte.remove(produkt.getName());
+        } else {
+            return false;
+        }
+
+        if (produkt.getBarcode() != null && !produkt.getBarcode().equals("")) {
+            barcodes.remove(produkt.getBarcode());
+        }
+
+        produkteSpeichern();
+
+        return true;
     }
 
     public ArrayList<Produkt> getProduktArrayList() {

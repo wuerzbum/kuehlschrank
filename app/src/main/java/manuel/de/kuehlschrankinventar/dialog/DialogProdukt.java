@@ -107,6 +107,8 @@ public class DialogProdukt extends AlertDialog {
             String[] items = activity.getResources().getStringArray(R.array.einheit_array);
             ArrayAdapter<String> einheitAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_dropdown_item, items);
             einheit.setAdapter(einheitAdapter);
+            einheit.setSelection(0);
+            produktMenge.setText("0");
 
             produktBarcode.setKeyListener(null);
             produktVerfallsdatum.setKeyListener(null);
@@ -267,7 +269,12 @@ public class DialogProdukt extends AlertDialog {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            double preisProEinheit = Double.parseDouble(produktPreisProEinheit.getText().toString())/(Double.parseDouble(produktMenge.getText().toString())*1.0);
+            double preisProEinheit;
+            try {
+                preisProEinheit = Double.parseDouble(produktPreisProEinheit.getText().toString()) / (Double.parseDouble(produktMenge.getText().toString()) * 1.0);
+            } catch (Exception e) {
+                preisProEinheit = 0;
+            }
             String barcodeString = produktBarcode.getText().toString();
             String einheitString = einheit.getSelectedItem().toString();
             Produkt produkt = new Produkt(produktNameString,

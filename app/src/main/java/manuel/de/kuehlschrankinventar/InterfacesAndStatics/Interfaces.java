@@ -32,6 +32,7 @@ public class Interfaces {
     }
 
     public interface listViewDialogListener {
+        void selected(int selectedItem);
         //TODO Methoden für listViewDialog einfügen
     }
 
@@ -41,5 +42,10 @@ public class Interfaces {
 
     public interface getStringListener {
         void getString(String string);
+    }
+
+    public interface onClickListener {
+        void onClick(Produkt produkt);
+        void onLongClicked(Produkt produkt);
     }
 }

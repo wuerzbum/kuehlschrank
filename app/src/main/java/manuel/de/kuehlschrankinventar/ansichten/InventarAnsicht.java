@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,12 +21,15 @@ import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.InterfacesAndStatics.StaticInts;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.activity.MainActivity;
 import manuel.de.kuehlschrankinventar.adapter.ArrayAdapterInventarAnsicht;
 import manuel.de.kuehlschrankinventar.dialog.DialogBenutzer;
+import manuel.de.kuehlschrankinventar.dialog.DialogListView;
 import manuel.de.kuehlschrankinventar.dialog.DialogProdukt;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
 
@@ -122,7 +126,7 @@ public class InventarAnsicht extends MyFragmentAnsicht {
             produktErstellen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ListenerNeuesProdukt();
+                    ListenerNeuesProdukt(null);
                 }
             });
         } catch (NullPointerException e) {
@@ -133,17 +137,58 @@ public class InventarAnsicht extends MyFragmentAnsicht {
     private void initProduktListe(){
         //TODO: Methode Programmieren
         ListView listenAnzeige = requireView().findViewById(R.id.list);
-        adapter = new ArrayAdapterInventarAnsicht(activity, activity.getInventar().getProduktArrayList());
-
-        listenAnzeige.setAdapter(adapter);
-
-        listenAnzeige.setOnLongClickListener(new View.OnLongClickListener() {
+        adapter = new ArrayAdapterInventarAnsicht(activity, activity.getInventar().getProduktArrayList(), new Interfaces.onClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                //TODO on Long click listener
-                return false;
+            public void onClick(Produkt produkt) {
+
+            }
+
+            @Override
+            public void onLongClicked(final Produkt produkt) {
+                String listViewTitel = "Produkt " + produkt.getName() + " bearbeiten";
+                String listViewBeschreibung = "Wählen Sie eine Aktion aus";
+                ArrayList<String> itemList = new ArrayList<>();
+                itemList.add("Gesamt bearbeiten");
+                itemList.add("Eingekauft");
+                itemList.add("Verzehrt");
+                itemList.add("Barcode hinzufügen");
+                itemList.add("Löschen");
+                new DialogListView(activity, listViewTitel, listViewBeschreibung, itemList, new Interfaces.listViewDialogListener() {
+                    @Override
+                    public void selected(int selectedItem) {
+                        switch (selectedItem) {
+                            case 0:
+                                //Gesamt bearbeiten
+                                ListenerNeuesProdukt(produkt);
+                                break;
+
+                            case 1:
+                                //TODO Eingekauft
+                                Toast.makeText(activity, "EK", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 2:
+                                //TODO Verzehrt
+                                Toast.makeText(activity, "VZ", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 3:
+                                //TODO Barcode hinzufügen
+                                break;
+
+                            case 4:
+                                //Löschen
+                                if (activity.getInventar().produktEntfernen(produkt)) {
+                                    initUI();
+                                }
+                                break;
+                        }
+                    }
+                }).show();
             }
         });
+
+        listenAnzeige.setAdapter(adapter);
     }
 
     private void neuesProduktHinzufuegen(Produkt produkt){
@@ -155,14 +200,25 @@ public class InventarAnsicht extends MyFragmentAnsicht {
         }
     }
 
-    private void ListenerNeuesProdukt(){
-        final AlertDialog dialog = new DialogProdukt(activity, null, activity.getInventar(), new Interfaces.produktDialogListener() {
+    private void produktUeberarbeiten(Produkt neuesProdukt, Produkt altesProdukt) {
+        if (activity.getInventar().produktBearbeiten(altesProdukt, neuesProdukt) != StaticInts.OK) {
+            //TODO Text
+            Toast.makeText(activity, "Überarbeitung hat nicht funktioniert", Toast.LENGTH_SHORT).show();
+        } else {
+            initUI();
+        }
+    }
+
+    private void ListenerNeuesProdukt(Produkt produkt){
+        final AlertDialog dialog = new DialogProdukt(activity, produkt, activity.getInventar(), new Interfaces.produktDialogListener() {
             @Override
             public void produktSpeichern(Produkt neuesProdukt, Produkt altesProdukt) {
                 if (altesProdukt == null) {
                     if (neuesProdukt != null) {
                         neuesProduktHinzufuegen(neuesProdukt);
                     }
+                } else {
+                    produktUeberarbeiten(neuesProdukt, altesProdukt);
                 }
             }
 

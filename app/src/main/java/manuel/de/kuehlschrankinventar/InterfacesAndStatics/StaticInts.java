@@ -24,5 +24,8 @@ public class StaticInts {
             NAME_IST_LEER = 0b1,
             NAME_IST_BEREITS_VORHANDEN = 0b10,
             BARCODE_IST_BEREITS_VORHANDEN = 0b100,
-            KAMERA_FREIGABE = 0b1000;
+            KAMERA_FREIGABE = 0b1000,
+            NAME_IST_NICHT_VORHANDEN = 0b10000,
+            KEINE_PRODUKTE_VORHANDEN = 0b100000,
+            BARCODE_NICHT_GEFUNDEN = 0b1000000;
 }

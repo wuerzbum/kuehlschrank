@@ -27,7 +27,7 @@ public class DialogListView extends AlertDialog {
     private ArrayList<String> listenInhalt;
 
     public DialogListView(Activity activity, String titel, String beschreibung, @NonNull ArrayList<String> listInhalt, Interfaces.listViewDialogListener listener) {
-        super(activity, R.style.AppTheme);
+        super(activity);
 
         this.activity = activity;
         this.listener = listener;
@@ -103,12 +103,11 @@ public class DialogListView extends AlertDialog {
     }
 
     private void abbrechen() {
-        //TODO methode abbrechen für DialogListView erstellen
         dismiss();
     }
 
     private void ausgewaehlt(int ausgewaehltePosition) {
-        //TODO methode ausgewaehlt für DialogListView erstellen
+        listener.selected(ausgewaehltePosition);
         dismiss();
     }
 }

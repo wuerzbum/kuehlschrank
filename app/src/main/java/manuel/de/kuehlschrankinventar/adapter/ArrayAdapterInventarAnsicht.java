@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import manuel.de.kuehlschrankinventar.InterfacesAndStatics.Interfaces;
 import manuel.de.kuehlschrankinventar.R;
 import manuel.de.kuehlschrankinventar.holder.Produkt;
 
@@ -26,12 +27,14 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
     private final ArrayList<Produkt> originalProdukte;
     private ArrayList<Produkt> gefilterteProdukte;
     private SimpleDateFormat sDF = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+    private Interfaces.onClickListener clickListener;
 
-    public ArrayAdapterInventarAnsicht(@NonNull Activity activity, ArrayList<Produkt> produkte) {
+    public ArrayAdapterInventarAnsicht(@NonNull Activity activity, ArrayList<Produkt> produkte, Interfaces.onClickListener listener) {
         super(activity, R.layout.listview_row_produkt);
         this.activity = activity;
         this.originalProdukte = produkte;
         this.gefilterteProdukte = produkte;
+        this.clickListener = listener;
     }
 
     @NonNull
@@ -47,7 +50,7 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Produkt tempProdukt = gefilterteProdukte.get(position);
+        final Produkt tempProdukt = gefilterteProdukte.get(position);
 
         //Produktname
         holder.getProduktName().setText(tempProdukt.getName());
@@ -79,6 +82,15 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
             @Override
             public void onClick(View v) {
                 holder.onClick(activity);
+                clickListener.onClick(tempProdukt);
+            }
+        });
+
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                clickListener.onLongClicked(tempProdukt);
+                return true;
             }
         });
 
@@ -213,6 +225,11 @@ public class ArrayAdapterInventarAnsicht extends ArrayAdapter<String> implements
         return gefilterteProdukte.size();
     }
 
+    /**
+     *
+     * @param position die position, auf die geklickt wurde
+     * @return gibt den Namen des Produktes zurück
+     */
     @Nullable
     @Override
     public String getItem(int position) {
