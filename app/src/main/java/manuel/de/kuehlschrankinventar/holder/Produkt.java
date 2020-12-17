@@ -4,8 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.TreeMap;
 
@@ -311,13 +313,23 @@ public class Produkt {
             if (einheit != null) {
                 saveObj.put(EINHEIT, einheit);
             }
-            if (besitzer != null) {
-                // TODO besitzer hinzufügen
-                // private TreeMap<String, Double> besitzer;
+            if (besitzermenge != null) {
+                JSONObject tempJSONObject = new JSONObject();
+                for (String key : besitzermenge.keySet()) {
+                    tempJSONObject.put(key, besitzermenge.get(key));
+                }
+                if (tempJSONObject.length() > 0) {
+                    saveObj.put(BESITERMENGE, tempJSONObject.toString());
+                }
             }
             if (minBestand != null) {
-                // TODO min. Bestand hinzufügen
-                // private TreeMap<Benutzer, Double>minBestand;
+                JSONObject tempJSONObject = new JSONObject();
+                for (String key : minBestand.keySet()) {
+                    tempJSONObject.put(key, minBestand.get(key));
+                }
+                if (tempJSONObject.length() > 0) {
+                    saveObj.put(MINDEST_BESTANDS_MENGE_JE_BESITZER, tempJSONObject.toString());
+                }
             }
             return saveObj.toString();
         } catch (JSONException e) {
@@ -340,34 +352,47 @@ public class Produkt {
             e.printStackTrace();
         }
         try {
-            //TODO MENGE
+            setMenge(object.getDouble(MENGE));
         } catch (NullPointerException e) {
             e.printStackTrace();
-            this.menge = 0;
+            setMenge(0);
         }
         try {
-            //TODO VERFALLSDATUM
+            setVerfallsdatum(sDF.parse(object.getString(VERFALLSDATUM)));
+        } catch (NullPointerException | ParseException e) {
+            e.printStackTrace();
+            setVerfallsdatum(null);
+        }
+        try {
+            setPreis(object.getDouble(PREIS));
         } catch (NullPointerException e) {
             e.printStackTrace();
+            setPreis(0);
         }
         try {
-            //TODO PREIS
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            this.preis = 0;
-        }
-        try {
-            //TODO EINHEIT
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        try {
-            //TODO BESITZER TREE MAP
+            setEinheit(object.getString(EINHEIT));
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
         try {
-            //TODO MIN. BESTANDSMENGE
+            JSONObject tempJsonObject = new JSONObject(object.getString(BESITERMENGE));
+            Iterator<String> keys = tempJsonObject.keys();
+            besitzermenge = new TreeMap<>();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                besitzermenge.put(key, tempJsonObject.getDouble(key));
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONObject tempJsonObject = new JSONObject(object.getString(MINDEST_BESTANDS_MENGE_JE_BESITZER));
+            Iterator<String> keys = tempJsonObject.keys();
+            minBestand = new TreeMap<>();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                minBestand.put(key, tempJsonObject.getDouble(key));
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
