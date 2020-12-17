@@ -108,6 +108,7 @@ public class BarcodeDatenbankAnsicht extends MyFragmentAnsicht {
                 @Override
                 public void onClick(View v) {
                     //TODO siehe Toast Text
+                    neuenBarcodeHinzufuegen();
                     Toast.makeText(activity, "Produkt mit Barcode erstellen (zuerst Barcode einscannen und danach Produktdialog mit eingelesenem Barcode starten)", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -118,18 +119,34 @@ public class BarcodeDatenbankAnsicht extends MyFragmentAnsicht {
 
     private void initBarcodeListe(){
         //TODO: Methode Programmieren
+        /*
+            Liste von Barcodes initialisieren
+            erhält man durch Main activity getInventar -> getBarcodes -> letzte Funktion muss noch erstellt werden!
+            --> Liste in privaten variablen (oben) abspeichern, damit andere Methoden darauf zugreifen können
+         */
     }
 
     private void neuenBarcodeHinzufuegen(){
         //TODO: Methode Programmieren
+        /*
+            Diese Methode wird durch klick auf den Button ausgelöst
+            Es soll ein neues Produkt erstellt werden, bei dem zuerst der Barcode eingescannt wird, bevor weitere Parameter eingestellt werden können.
+         */
     }
 
     private void listenerNeuerBarcode(){
         //TODO: Methode Programmieren
+        /*
+            Die Liste muss neu geladen werden, wenn ein neues Produkt hinzugefügt wurde
+         */
     }
 
     @Override
     public void update() {
         //TODO update Fragment
+        /*
+            Alle Listen aktualisieren -> Wenn z.B. aus anderer Ansicht zurück gekehrt wird,
+            sollte diese Methode noch aufgerufen werden
+         */
     }
 }

@@ -15,8 +15,14 @@ public class Benutzer {
     private TreeMap<Date, Double> ausgaben;
     private double budget;
 
-    public Benutzer(String cgString, double cgDouble){ //CG: Funktion ohne Rückgabewert (void)?
+    public Benutzer(String cgString, double cgDouble){
         //TODO: Methode Benutzer in Klasse Benutzer ausarbeiten
+        /*
+            String ist der Benutzername -> dies der privaten Variablen zuordnen
+            double ist das Budget -> privater Variablen zurodnen
+
+            einkaufsliste und ausgaben gibt es bei einem neuen Benutzer noch nicht, daher muss das nicht initialisiert werden.
+         */
     }
 
     public Benutzer(String JSONObjectString) {
@@ -36,6 +42,11 @@ public class Benutzer {
 
     public void neuerEinkauf(double cgDouble) {
         //TODO: Methode neuerEinkauf in Klasse Benutzer ausarbeiten
+        /*
+            Einkaufsliste kontrollieren und Produkte, deren Menge nun größer sind als der Mindestbestand von der Liste Streichen
+            übergebener double soll der Betrag sein, welcher ausgegeben wurde. Hier der Treemap ausgaben mit neuem Datum als key einfügen.
+            -> ist das Datum schon vorhanden (Einkauf am selben Tag) Ausgabewert von dem Tag anpassen
+         */
     }
 
     private void loadBenutzer(JSONObject savedObject) throws JSONException {
