@@ -6,5 +6,9 @@ public class StaticStrings {
             BARCODE = "BARCODE",
             BENUTZER = "BENUTZER",
             BENUTZERNAME = "BENUTZERNAME",
-            PRODUKTNAME = "PRODUKTNAME";
+            EINHEIT = "EINHEIT",
+            MENGE = "MENGE",
+            PREIS = "PREIS",
+            PRODUKTNAME = "PRODUKTNAME",
+            VERFALLSDATUM = "VERFALLSDATUM";
 }
